@@ -1,0 +1,150 @@
+{
+  "properties": {
+    "connectionReferences": {
+      "shared_sendmail": {
+        "runtimeSource": "invoker",
+        "connection": {
+          "connectionReferenceLogicalName": "crcf5_sharedsendmail_1e539"
+        },
+        "api": {
+          "name": "shared_sendmail"
+        }
+      }
+    },
+    "definition": {
+      "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+      "contentVersion": "1.0.0.0",
+      "parameters": {
+        "$connections": {
+          "defaultValue": {},
+          "type": "Object"
+        },
+        "$authentication": {
+          "defaultValue": {},
+          "type": "SecureObject"
+        }
+      },
+      "triggers": {
+        "manual": {
+          "metadata": {
+            "operationMetadataId": "2662566a-0dc4-4c3a-999b-22ccca819ac9"
+          },
+          "type": "Request",
+          "kind": "Skills",
+          "inputs": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "text": {
+                  "title": "ProductName",
+                  "type": "string",
+                  "x-ms-dynamically-added": true,
+                  "description": "Nombre del Producto",
+                  "x-ms-content-hint": "TEXT"
+                },
+                "text_1": {
+                  "title": "CustomerName",
+                  "type": "string",
+                  "x-ms-dynamically-added": true,
+                  "description": "Nombre del Cliente",
+                  "x-ms-content-hint": "TEXT"
+                },
+                "email": {
+                  "title": "CustomerEmail",
+                  "type": "string",
+                  "format": "email",
+                  "x-ms-dynamically-added": true,
+                  "description": "Email del Cliente",
+                  "x-ms-content-hint": "EMAIL"
+                },
+                "text_2": {
+                  "title": "StoreLocation",
+                  "type": "string",
+                  "x-ms-dynamically-added": true,
+                  "description": "Ubicación de Tienda",
+                  "x-ms-content-hint": "TEXT"
+                }
+              },
+              "required": [
+                "text",
+                "text_1",
+                "email",
+                "text_2"
+              ]
+            }
+          }
+        }
+      },
+      "actions": {
+        "Generar_Número_de_Referencia": {
+          "runAfter": {},
+          "metadata": {
+            "operationMetadataId": "01c68f23-0b60-4a0d-8f7c-3f66258d04fd"
+          },
+          "type": "Compose",
+          "inputs": "concat('COT-', formatDateTime(utcNow(), 'yyyyMMddHHmmss'))"
+        },
+        "Send_an_email_notification_(V3)": {
+          "runAfter": {
+            "Generar_Número_de_Referencia": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "374512be-e0fc-4e2f-b33e-44fff9e25c8d"
+          },
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_sendmail",
+              "operationId": "SendEmailV3",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_sendmail"
+            },
+            "parameters": {
+              "request/to": "alemartinez@microsoft.com",
+              "request/subject": "Nueva Consulta de Precio - @{triggerBody()['text']}",
+              "request/text": "<p>Nueva consulta de precio recibida:<br>\n<br>\n &nbsp;&nbsp;&nbsp;&nbsp;Cliente: @{triggerBody()['text_1']}<br>\n &nbsp;&nbsp;&nbsp;&nbsp;Email: @{triggerBody()['email']}<br>\n &nbsp;&nbsp;&nbsp;&nbsp;Producto: @{triggerBody()['text']}<br>\n &nbsp;&nbsp;&nbsp;&nbsp;Tienda: @{triggerBody()['text_2']}<br>\n &nbsp;&nbsp;&nbsp;&nbsp;Número de Referencia: @{outputs('Generar_Número_de_Referencia')}<br>\n &nbsp;&nbsp;&nbsp;&nbsp;Fecha: @{utcNow()}<br>\n &nbsp;&nbsp;&nbsp;&nbsp;Por favor, contactar al cliente a la brevedad.</p>"
+            },
+            "authentication": "@parameters('$authentication')"
+          }
+        },
+        "Respond_to_Copilot": {
+          "runAfter": {
+            "Send_an_email_notification_(V3)": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "02cf2b83-aab7-4e02-9075-014b21dc42e6"
+          },
+          "type": "Response",
+          "kind": "Skills",
+          "inputs": {
+            "statusCode": 200,
+            "body": {
+              "confirmationmessage": "Hemos enviado tu consulta al equipo de ventas.",
+              "referencenumber": "@{outputs('Generar_Número_de_Referencia')}"
+            },
+            "schema": {
+              "type": "object",
+              "properties": {
+                "confirmationmessage": {
+                  "title": "ConfirmationMessage",
+                  "x-ms-dynamically-added": true,
+                  "type": "string"
+                },
+                "referencenumber": {
+                  "title": "ReferenceNumber",
+                  "x-ms-dynamically-added": true,
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "templateName": null
+  },
+  "schemaVersion": "1.0.0.0"
+}

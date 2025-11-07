@@ -1,0 +1,11 @@
+<botcomponent schemaname="miemp_asistenteRetailConFlow.topic.ConsultadeProductos">
+  <componenttype>9</componenttype>
+  <description>Permite consultar información sobre productos disponibles</description>
+  <iscustomizable>1</iscustomizable>
+  <name>Consulta de Productos</name>
+  <parentbotid>
+    <schemaname>miemp_asistenteRetailConFlow</schemaname>
+  </parentbotid>
+  <statecode>0</statecode>
+  <statuscode>1</statuscode>
+</botcomponent>

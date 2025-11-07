@@ -1,0 +1,10 @@
+<bot schemaname="miemp_asistenteRetailConFlow">
+  <authenticationmode>2</authenticationmode>
+  <authenticationtrigger>1</authenticationtrigger>
+  <iscustomizable>0</iscustomizable>
+  <language>1033</language>
+  <name>Asistente de Ventas Retail</name>
+  <runtimeprovider>0</runtimeprovider>
+  <synchronizationstatus>{"lastFinishedPublishOperation":null,"contentVersion":2,"$kind":"BotSynchronizationDetails","currentSynchronizationState":{"$kind":"SynchronizationState","botRegistration":{"$kind":"BotRegistrationDetails","botRegistrationIdConsumptionTime":"2025-11-07T06:28:16Z","applicationId":"28df16b7-272a-4c60-a278-3db916a9fae2","isAppAvailableInTenant":true},"provisioningStatus":"Provisioned","state":"Synchronizing"},"lastSynchronizedOnUtc":"2025-11-07T06:28:23.3593299Z"}</synchronizationstatus>
+  <template>RetailAgentTemplate-1.0.0</template>
+</bot>
