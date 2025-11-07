@@ -1,0 +1,11 @@
+<botcomponent schemaname="miemp_asistenteVentasRetail.topic.UbicacionesdeTiendas">
+  <componenttype>9</componenttype>
+  <description>Muestra las direcciones y horarios de nuestras tiendas</description>
+  <iscustomizable>1</iscustomizable>
+  <name>Ubicaciones de Tiendas</name>
+  <parentbotid>
+    <schemaname>miemp_asistenteVentasRetail</schemaname>
+  </parentbotid>
+  <statecode>0</statecode>
+  <statuscode>1</statuscode>
+</botcomponent>

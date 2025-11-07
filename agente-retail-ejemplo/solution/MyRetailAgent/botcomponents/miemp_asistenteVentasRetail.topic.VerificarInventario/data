@@ -1,0 +1,54 @@
+kind: AdaptiveDialog
+beginDialog:
+  kind: OnRecognizedIntent
+  id: main
+  intent:
+    displayName: Verificar Inventario
+    includeInOnSelectIntent: true
+    triggerQueries:
+      - verificar inventario
+      - hay stock
+      - disponibilidad
+      - tienen en stock
+      - está disponible
+
+  actions:
+    - kind: Question
+      id: question_product
+      variable: Topic.ProductName
+      prompt: ¿Qué producto te gustaría verificar?
+      entity: StringPrebuiltEntity
+
+    - kind: Question
+      id: question_location
+      variable: Topic.StoreLocation
+      prompt: ¿En qué tienda deseas verificar?
+      entity:
+        items:
+          - displayName: Tienda Centro
+            id: centro
+
+          - displayName: Tienda Norte
+            id: norte
+
+          - displayName: Tienda Sur
+            id: sur
+
+          - displayName: Tienda Este
+            id: este
+
+          - displayName: Tienda Oeste
+            id: oeste
+
+          - displayName: Tienda Online
+            id: online
+
+        kind: ClosedListEntity
+
+    - kind: SendActivity
+      id: sendMessage_checking
+      activity: Verificando disponibilidad de {Topic.ProductName} en {Topic.StoreLocation}...
+
+    - kind: SendActivity
+      id: sendMessage_result
+      activity: El producto está disponible en {Topic.StoreLocation}. ¿Te gustaría conocer el precio o hacer alguna otra consulta?

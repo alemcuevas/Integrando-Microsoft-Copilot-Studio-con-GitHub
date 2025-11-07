@@ -11,14 +11,14 @@ entity:
 
 components:
   # ============================================
-  # TOPIC: Greeting (Saludo)
+  # TOPIC: Saludo
   # ============================================
   - kind: DialogComponent
     managedProperties:
       isCustomizable: true
 
     displayName: Saludo
-    description: Topic de bienvenida para el agente de retail
+    description: Mensaje de bienvenida para el agente de retail
     shareContext: {}
     state: Active
     status: Active
@@ -37,6 +37,8 @@ components:
             - buenas noches
             - qué tal
             - saludos
+            - hey
+            - holi
 
         actions:
           - kind: SendActivity
@@ -80,14 +82,14 @@ components:
                         value: consultar precio
 
   # ============================================
-  # TOPIC: Product Inquiry (Consulta de Productos)
+  # TOPIC: Consulta de Productos
   # ============================================
   - kind: DialogComponent
     managedProperties:
       isCustomizable: true
 
     displayName: Consulta de Productos
-    description: Permite al usuario consultar información sobre productos
+    description: Permite consultar información sobre productos disponibles
     shareContext: {}
     state: Active
     status: Active
@@ -115,38 +117,22 @@ components:
           - kind: Question
             id: question_category
             variable: Topic.ProductCategory
-            prompt: Selecciona una categoría
-            entity:
-              kind: ClosedListEntity
-              items:
-                - id: electronica
-                  displayName: Electrónica
-                - id: ropa
-                  displayName: Ropa y Accesorios
-                - id: hogar
-                  displayName: Hogar y Cocina
-                - id: deportes
-                  displayName: Deportes
-                - id: juguetes
-                  displayName: Juguetes
-                - id: belleza
-                  displayName: Belleza y Cuidado Personal
-                - id: alimentos
-                  displayName: Alimentos y Bebidas
+            prompt: Selecciona una categoría (Electrónica, Ropa, Hogar, Deportes, Juguetes, Belleza, Alimentos)
+            entity: StringPrebuiltEntity
 
           - kind: SendActivity
             id: sendMessage_result
             activity: Excelente elección. Te mostraré nuestros productos de {Topic.ProductCategory}. ¿Necesitas más información sobre algún producto específico?
 
   # ============================================
-  # TOPIC: Check Inventory (Verificar Inventario)
+  # TOPIC: Verificar Inventario
   # ============================================
   - kind: DialogComponent
     managedProperties:
       isCustomizable: true
 
     displayName: Verificar Inventario
-    description: Permite verificar la disponibilidad de productos en tiendas
+    description: Verifica la disponibilidad de productos en las tiendas
     shareContext: {}
     state: Active
     status: Active
@@ -173,24 +159,10 @@ components:
             entity: StringPrebuiltEntity
 
           - kind: Question
-            id: question_location
+            id: question_inventory_location
             variable: Topic.StoreLocation
-            prompt: ¿En qué tienda deseas verificar?
-            entity:
-              kind: ClosedListEntity
-              items:
-                - id: centro
-                  displayName: Tienda Centro
-                - id: norte
-                  displayName: Tienda Norte
-                - id: sur
-                  displayName: Tienda Sur
-                - id: este
-                  displayName: Tienda Este
-                - id: oeste
-                  displayName: Tienda Oeste
-                - id: online
-                  displayName: Tienda Online
+            prompt: ¿En qué tienda deseas verificar? (Por ejemplo: Centro, Norte, Sur, Este, Oeste, Online)
+            entity: StringPrebuiltEntity
 
           - kind: SendActivity
             id: sendMessage_checking
@@ -201,14 +173,14 @@ components:
             activity: El producto está disponible en {Topic.StoreLocation}. ¿Te gustaría conocer el precio o hacer alguna otra consulta?
 
   # ============================================
-  # TOPIC: Pricing Info (Información de Precios)
+  # TOPIC: Información de Precios (con Cloud Flow)
   # ============================================
   - kind: DialogComponent
     managedProperties:
       isCustomizable: true
 
     displayName: Información de Precios
-    description: Proporciona información sobre precios de productos
+    description: Proporciona información sobre precios y envía cotización por email
     shareContext: {}
     state: Active
     status: Active
@@ -226,6 +198,8 @@ components:
             - consultar precio
             - valor
             - qué precio tiene
+            - cotización
+            - cotizar
 
         actions:
           - kind: Question
@@ -234,19 +208,60 @@ components:
             prompt: ¿De qué producto deseas conocer el precio?
             entity: StringPrebuiltEntity
 
+          - kind: Question
+            id: question_customer_name
+            variable: Topic.CustomerName
+            prompt: Para enviarte una cotización detallada, ¿cuál es tu nombre?
+            entity: StringPrebuiltEntity
+
+          - kind: Question
+            id: question_customer_email
+            variable: Topic.CustomerEmail
+            prompt: ¿Cuál es tu email?
+            entity: StringPrebuiltEntity
+
+          - kind: Question
+            id: question_store_location
+            variable: Topic.StoreLocation
+            prompt: ¿En qué tienda prefieres recoger el producto? (Por ejemplo: Centro, Norte, Sur, Este, Oeste, Online)
+            entity: StringPrebuiltEntity
+
           - kind: SendActivity
-            id: sendMessage_price
-            activity: El precio de {Topic.ProductForPrice} es $XX.XX. Actualmente tenemos promociones especiales. ¿Te gustaría conocer más detalles?
+            id: sendMessage_processing
+            activity: Perfecto, estoy enviando tu solicitud al equipo de ventas...
+
+          - kind: InvokeFlowAction
+            id: invoke_email_flow
+            flowId: "ADD36A2B-9BBB-F011-BBD2-000D3A36E147"
+            input:
+              binding:
+                text: =Topic.ProductForPrice
+                text_1: =Topic.CustomerName
+                email: =Topic.CustomerEmail
+                text_2: =Topic.StoreLocation
+            output: Topic.FlowResponse
+
+          - kind: SendActivity
+            id: send_confirmation
+            activity: |
+              ✓ {Topic.FlowResponse.ConfirmationMessage}
+              
+              📧 Recibirás la cotización en {Topic.CustomerEmail}
+              📝 Tu número de referencia es: {Topic.FlowResponse.ReferenceNumber}
+              
+              El equipo de ventas te contactará pronto con los mejores precios y promociones disponibles.
+              
+              ¿Hay algo más en lo que pueda ayudarte?
 
   # ============================================
-  # TOPIC: Store Locations (Ubicaciones de Tiendas)
+  # TOPIC: Ubicaciones de Tiendas
   # ============================================
   - kind: DialogComponent
     managedProperties:
       isCustomizable: true
 
     displayName: Ubicaciones de Tiendas
-    description: Proporciona información sobre ubicaciones de tiendas
+    description: Muestra las direcciones y horarios de nuestras tiendas
     shareContext: {}
     state: Active
     status: Active
@@ -279,14 +294,14 @@ components:
               🌐 Tienda Online - www.tienda.com
 
   # ============================================
-  # TOPIC: Escalate (Transferir a Agente)
+  # TOPIC: Transferir a Agente Humano
   # ============================================
   - kind: DialogComponent
     managedProperties:
       isCustomizable: true
 
     displayName: Transferir a Agente Humano
-    description: Permite escalar la conversación a un agente humano
+    description: Transfiere la conversación a un representante de ventas
     shareContext: {}
     state: Active
     status: Active
@@ -313,18 +328,19 @@ components:
             activity: Entiendo que prefieres hablar con un representante. Te estoy transfiriendo ahora. ¿Hay algo más en lo que pueda ayudarte mientras esperas?
 
   # ============================================
-  # SYSTEM TOPICS (mantener los del template base)
+  # TOPICS DEL SISTEMA
   # ============================================
   - kind: DialogComponent
     managedProperties:
       isCustomizable: false
 
-    displayName: Fallback
-    description: This system topic triggers when the user's utterance does not match any existing topics.
+    displayName: Respuesta Predeterminada
+    description: Se activa cuando no se reconoce la consulta del usuario
     shareContext: {}
     state: Active
     status: Active
-    schemaName: template-content.topic.Fallback
+    publisherUniqueName: DefaultPublisherorgce8fe757
+    schemaName: template-content.topic.RespuestaPredeterminada
     dialog:
       beginDialog:
         kind: OnUnknownIntent
@@ -349,12 +365,13 @@ components:
     managedProperties:
       isCustomizable: false
 
-    displayName: Conversation Start
-    description: This system topic triggers when the agent receives an Activity indicating the beginning of a new conversation.
+    displayName: Inicio de Conversación
+    description: Se activa al comenzar una nueva conversación con el agente
     shareContext: {}
     state: Active
     status: Active
-    schemaName: template-content.topic.ConversationStart
+    publisherUniqueName: DefaultPublisherorgce8fe757
+    schemaName: template-content.topic.IniciodeConversacion
     dialog:
       beginDialog:
         kind: OnConversationStart
@@ -372,12 +389,13 @@ components:
     managedProperties:
       isCustomizable: false
 
-    displayName: On Error
-    description: This system topic triggers when the agent encounters an error.
+    displayName: Error del Sistema
+    description: Se activa cuando el agente encuentra un error durante la conversación
     shareContext: {}
     state: Active
     status: Active
-    schemaName: template-content.topic.OnError
+    publisherUniqueName: DefaultPublisherorgce8fe757
+    schemaName: template-content.topic.ErrordelSistema
     dialog:
       startBehavior: UseLatestPublishedContentAndCancelOtherTopics
       beginDialog:

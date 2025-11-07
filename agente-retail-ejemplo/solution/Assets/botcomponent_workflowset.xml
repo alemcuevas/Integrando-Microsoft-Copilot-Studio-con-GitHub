@@ -1,0 +1,5 @@
+<botcomponent_workflowset>
+  <botcomponent_workflow botcomponentid.schemaname="miemp_asistenteRetailConFlow.topic.InformacindePrecios" workflowid.workflowid="add36a2b-9bbb-f011-bbd2-000d3a36e147">
+    <iscustomizable>1</iscustomizable>
+  </botcomponent_workflow>
+</botcomponent_workflowset>

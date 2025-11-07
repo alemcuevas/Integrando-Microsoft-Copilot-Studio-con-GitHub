@@ -1,0 +1,22 @@
+kind: AdaptiveDialog
+startBehavior: UseLatestPublishedContentAndCancelOtherTopics
+beginDialog:
+  kind: OnError
+  id: main
+  actions:
+    - kind: SetVariable
+      id: setVariable_timestamp
+      variable: init:Topic.CurrentTime
+      value: =Text(Now(), DateTimeFormat.UTC)
+
+    - kind: SendActivity
+      id: sendMessage_error
+      activity: Ha ocurrido un error. Por favor, intenta nuevamente. Si el problema persiste, contáctanos.
+
+    - kind: LogCustomTelemetryEvent
+      id: log_error
+      eventName: RetailAgentError
+      properties: "={ErrorMessage: System.Error.Message, ErrorCode: System.Error.Code, TimeUTC: Topic.CurrentTime, ConversationId: System.Conversation.Id}"
+
+    - kind: CancelAllDialogs
+      id: cancel_on_error

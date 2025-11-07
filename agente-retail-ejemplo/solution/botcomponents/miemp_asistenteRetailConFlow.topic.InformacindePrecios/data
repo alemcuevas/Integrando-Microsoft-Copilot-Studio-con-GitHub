@@ -1,0 +1,68 @@
+kind: AdaptiveDialog
+beginDialog:
+  kind: OnRecognizedIntent
+  id: main
+  intent:
+    displayName: Información de Precios
+    includeInOnSelectIntent: true
+    triggerQueries:
+      - cuánto cuesta
+      - precio
+      - consultar precio
+      - valor
+      - qué precio tiene
+      - cotización
+      - cotizar
+
+  actions:
+    - kind: Question
+      id: question_product
+      variable: Topic.ProductForPrice
+      prompt: ¿De qué producto deseas conocer el precio?
+      entity: StringPrebuiltEntity
+
+    - kind: Question
+      id: question_customer_name
+      variable: Topic.CustomerName
+      prompt: Para enviarte una cotización detallada, ¿cuál es tu nombre?
+      entity: StringPrebuiltEntity
+
+    - kind: Question
+      id: question_customer_email
+      variable: Topic.CustomerEmail
+      prompt: ¿Cuál es tu email?
+      entity: StringPrebuiltEntity
+
+    - kind: Question
+      id: question_store_location
+      variable: Topic.StoreLocation
+      prompt: "¿En qué tienda prefieres recoger el producto? (Por ejemplo: Centro, Norte, Sur, Este, Oeste, Online)"
+      entity: StringPrebuiltEntity
+
+    - kind: SendActivity
+      id: sendMessage_processing
+      activity: Perfecto, estoy enviando tu solicitud al equipo de ventas...
+
+    - kind: InvokeFlowAction
+      id: invoke_email_flow
+      input:
+        binding:
+          email: =Topic.CustomerEmail
+          text: =Topic.ProductForPrice
+          text_1: =Topic.CustomerName
+          text_2: =Topic.StoreLocation
+
+      output: Topic.FlowResponse
+      flowId: add36a2b-9bbb-f011-bbd2-000d3a36e147
+
+    - kind: SendActivity
+      id: send_confirmation
+      activity: |
+        ✓ {Topic.FlowResponse.ConfirmationMessage}
+
+        📧 Recibirás la cotización en {Topic.CustomerEmail}
+        📝 Tu número de referencia es: {Topic.FlowResponse.ReferenceNumber}
+
+        El equipo de ventas te contactará pronto con los mejores precios y promociones disponibles.
+
+        ¿Hay algo más en lo que pueda ayudarte?

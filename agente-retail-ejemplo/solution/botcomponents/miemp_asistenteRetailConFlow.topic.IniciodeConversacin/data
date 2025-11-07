@@ -1,0 +1,12 @@
+kind: AdaptiveDialog
+beginDialog:
+  kind: OnConversationStart
+  id: main
+  actions:
+    - kind: SendActivity
+      id: sendMessage_start
+      activity:
+        text:
+          - ¡Hola! Soy el Asistente Virtual de Retail. Puedo ayudarte con información sobre productos, precios, inventario y ubicaciones de tiendas. ¿En qué puedo ayudarte hoy?
+        speak:
+          - Hola y gracias por contactarnos. ¿Cómo puedo ayudarte hoy?

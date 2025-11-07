@@ -1,0 +1,11 @@
+<botcomponent schemaname="miemp_asistenteVentasRetail.topic.Saludo">
+  <componenttype>9</componenttype>
+  <description>Mensaje de bienvenida para el agente de retail</description>
+  <iscustomizable>1</iscustomizable>
+  <name>Saludo</name>
+  <parentbotid>
+    <schemaname>miemp_asistenteVentasRetail</schemaname>
+  </parentbotid>
+  <statecode>0</statecode>
+  <statuscode>1</statuscode>
+</botcomponent>

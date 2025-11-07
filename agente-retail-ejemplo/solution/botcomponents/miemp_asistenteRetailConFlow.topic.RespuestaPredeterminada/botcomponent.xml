@@ -1,0 +1,11 @@
+<botcomponent schemaname="miemp_asistenteRetailConFlow.topic.RespuestaPredeterminada">
+  <componenttype>9</componenttype>
+  <description>Se activa cuando no se reconoce la consulta del usuario</description>
+  <iscustomizable>0</iscustomizable>
+  <name>Respuesta Predeterminada</name>
+  <parentbotid>
+    <schemaname>miemp_asistenteRetailConFlow</schemaname>
+  </parentbotid>
+  <statecode>0</statecode>
+  <statuscode>1</statuscode>
+</botcomponent>

@@ -1,0 +1,11 @@
+<botcomponent schemaname="miemp_asistenteRetailConFlow.topic.InformacindePrecios">
+  <componenttype>9</componenttype>
+  <description>Proporciona información sobre precios y envía cotización por email</description>
+  <iscustomizable>1</iscustomizable>
+  <name>Información de Precios</name>
+  <parentbotid>
+    <schemaname>miemp_asistenteRetailConFlow</schemaname>
+  </parentbotid>
+  <statecode>0</statecode>
+  <statuscode>1</statuscode>
+</botcomponent>

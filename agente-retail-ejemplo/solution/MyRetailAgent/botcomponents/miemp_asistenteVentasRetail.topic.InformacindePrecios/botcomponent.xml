@@ -1,0 +1,11 @@
+<botcomponent schemaname="miemp_asistenteVentasRetail.topic.InformacindePrecios">
+  <componenttype>9</componenttype>
+  <description>Proporciona información sobre precios y promociones</description>
+  <iscustomizable>1</iscustomizable>
+  <name>Información de Precios</name>
+  <parentbotid>
+    <schemaname>miemp_asistenteVentasRetail</schemaname>
+  </parentbotid>
+  <statecode>0</statecode>
+  <statuscode>1</statuscode>
+</botcomponent>

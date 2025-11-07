@@ -1,0 +1,11 @@
+<botcomponent schemaname="miemp_asistenteVentasRetail.topic.ErrordelSistema">
+  <componenttype>9</componenttype>
+  <description>Se activa cuando el agente encuentra un error durante la conversación</description>
+  <iscustomizable>0</iscustomizable>
+  <name>Error del Sistema</name>
+  <parentbotid>
+    <schemaname>miemp_asistenteVentasRetail</schemaname>
+  </parentbotid>
+  <statecode>0</statecode>
+  <statuscode>1</statuscode>
+</botcomponent>

@@ -1,0 +1,28 @@
+# Archivos de exportación temporal
+temp-export/
+solution-export/
+
+# Archivos de Power Platform CLI
+*.zip
+
+# Archivos de Visual Studio
+.vs/
+*.user
+*.suo
+
+# Archivos de sistema
+.DS_Store
+Thumbs.db
+
+# Node modules si usas npm
+node_modules/
+
+# Logs
+*.log
+
+# IDs temporales (estos se regeneran)
+agent-id.txt
+
+# Archivos de backup
+*.bak
+*~
