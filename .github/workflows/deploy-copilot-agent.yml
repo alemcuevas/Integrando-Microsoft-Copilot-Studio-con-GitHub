@@ -1,0 +1,230 @@
+name: CI/CD - Deploy Copilot Agent
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'solution/**'
+      - 'templates/**'
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'solution/**'
+      - 'templates/**'
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Ambiente de destino'
+        required: true
+        type: choice
+        options:
+          - dev
+          - test
+          - prod
+
+env:
+  SOLUTION_NAME: MyRetailAgent
+  POWER_PLATFORM_ENV_DEV: ${{ secrets.POWER_PLATFORM_ENV_DEV }}
+  POWER_PLATFORM_ENV_TEST: ${{ secrets.POWER_PLATFORM_ENV_TEST }}
+  POWER_PLATFORM_ENV_PROD: ${{ secrets.POWER_PLATFORM_ENV_PROD }}
+
+jobs:
+  validate:
+    name: 🔍 Validar Solución
+    runs-on: windows-latest
+    
+    steps:
+      - name: 📥 Checkout código
+        uses: actions/checkout@v4
+      
+      - name: 🔧 Instalar Power Platform CLI
+        uses: microsoft/powerplatform-actions/actions-install@v1
+      
+      - name: 🔐 Autenticar en Power Platform (Dev)
+        uses: microsoft/powerplatform-actions/auth@v1
+        with:
+          environment-url: ${{ secrets.POWER_PLATFORM_URL_DEV }}
+          app-id: ${{ secrets.POWER_PLATFORM_APP_ID }}
+          client-secret: ${{ secrets.POWER_PLATFORM_CLIENT_SECRET }}
+          tenant-id: ${{ secrets.POWER_PLATFORM_TENANT_ID }}
+      
+      - name: 📦 Empaquetar solución
+        run: |
+          pac solution pack `
+            --folder solution `
+            --zipfile ${{ env.SOLUTION_NAME }}.zip `
+            --processCanvasApps
+      
+      - name: ✅ Validar solución
+        run: |
+          pac solution check `
+            --path ${{ env.SOLUTION_NAME }}.zip `
+            --outputDirectory validation-results
+      
+      - name: 📊 Subir resultados de validación
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: validation-results
+          path: validation-results/
+      
+      - name: 📤 Subir solución empaquetada
+        uses: actions/upload-artifact@v4
+        with:
+          name: solution-package
+          path: ${{ env.SOLUTION_NAME }}.zip
+
+  deploy-dev:
+    name: 🚀 Deploy a DEV
+    needs: validate
+    runs-on: windows-latest
+    environment: 
+      name: development
+      url: ${{ secrets.POWER_PLATFORM_URL_DEV }}
+    if: github.ref == 'refs/heads/main'
+    
+    steps:
+      - name: 📥 Descargar solución
+        uses: actions/download-artifact@v4
+        with:
+          name: solution-package
+      
+      - name: 🔧 Instalar Power Platform CLI
+        uses: microsoft/powerplatform-actions/actions-install@v1
+      
+      - name: 🔐 Autenticar en Power Platform (Dev)
+        uses: microsoft/powerplatform-actions/auth@v1
+        with:
+          environment-url: ${{ secrets.POWER_PLATFORM_URL_DEV }}
+          app-id: ${{ secrets.POWER_PLATFORM_APP_ID }}
+          client-secret: ${{ secrets.POWER_PLATFORM_CLIENT_SECRET }}
+          tenant-id: ${{ secrets.POWER_PLATFORM_TENANT_ID }}
+      
+      - name: 📦 Importar solución a DEV
+        uses: microsoft/powerplatform-actions/import-solution@v1
+        with:
+          environment-url: ${{ secrets.POWER_PLATFORM_URL_DEV }}
+          solution-file: ${{ env.SOLUTION_NAME }}.zip
+          force-overwrite: true
+          publish-changes: true
+          skip-dependency-check: false
+      
+      - name: 🤖 Publicar agente
+        run: |
+          $agents = pac copilot list --json | ConvertFrom-Json
+          $agent = $agents | Where-Object { $_.displayName -like "*RetailConFlow*" } | Select-Object -First 1
+          
+          if ($agent) {
+            Write-Host "✅ Publicando agente: $($agent.displayName)"
+            pac copilot publish --copilot-id $agent.copilotId
+          } else {
+            Write-Warning "⚠️ Agente no encontrado"
+          }
+
+  deploy-test:
+    name: 🧪 Deploy a TEST
+    needs: deploy-dev
+    runs-on: windows-latest
+    environment: 
+      name: test
+      url: ${{ secrets.POWER_PLATFORM_URL_TEST }}
+    if: github.ref == 'refs/heads/main'
+    
+    steps:
+      - name: 📥 Descargar solución
+        uses: actions/download-artifact@v4
+        with:
+          name: solution-package
+      
+      - name: 🔧 Instalar Power Platform CLI
+        uses: microsoft/powerplatform-actions/actions-install@v1
+      
+      - name: 🔐 Autenticar en Power Platform (Test)
+        uses: microsoft/powerplatform-actions/auth@v1
+        with:
+          environment-url: ${{ secrets.POWER_PLATFORM_URL_TEST }}
+          app-id: ${{ secrets.POWER_PLATFORM_APP_ID }}
+          client-secret: ${{ secrets.POWER_PLATFORM_CLIENT_SECRET }}
+          tenant-id: ${{ secrets.POWER_PLATFORM_TENANT_ID }}
+      
+      - name: 📦 Importar solución a TEST
+        uses: microsoft/powerplatform-actions/import-solution@v1
+        with:
+          environment-url: ${{ secrets.POWER_PLATFORM_URL_TEST }}
+          solution-file: ${{ env.SOLUTION_NAME }}.zip
+          force-overwrite: true
+          publish-changes: true
+      
+      - name: 🤖 Publicar agente
+        run: |
+          $agents = pac copilot list --json | ConvertFrom-Json
+          $agent = $agents | Where-Object { $_.displayName -like "*RetailConFlow*" } | Select-Object -First 1
+          
+          if ($agent) {
+            pac copilot publish --copilot-id $agent.copilotId
+          }
+
+  deploy-prod:
+    name: 🏭 Deploy a PROD
+    needs: deploy-test
+    runs-on: windows-latest
+    environment: 
+      name: production
+      url: ${{ secrets.POWER_PLATFORM_URL_PROD }}
+    if: github.ref == 'refs/heads/main'
+    
+    steps:
+      - name: 📥 Descargar solución
+        uses: actions/download-artifact@v4
+        with:
+          name: solution-package
+      
+      - name: 🔧 Instalar Power Platform CLI
+        uses: microsoft/powerplatform-actions/actions-install@v1
+      
+      - name: 🔐 Autenticar en Power Platform (Prod)
+        uses: microsoft/powerplatform-actions/auth@v1
+        with:
+          environment-url: ${{ secrets.POWER_PLATFORM_URL_PROD }}
+          app-id: ${{ secrets.POWER_PLATFORM_APP_ID }}
+          client-secret: ${{ secrets.POWER_PLATFORM_CLIENT_SECRET }}
+          tenant-id: ${{ secrets.POWER_PLATFORM_TENANT_ID }}
+      
+      - name: 📦 Importar solución a PROD
+        uses: microsoft/powerplatform-actions/import-solution@v1
+        with:
+          environment-url: ${{ secrets.POWER_PLATFORM_URL_PROD }}
+          solution-file: ${{ env.SOLUTION_NAME }}.zip
+          force-overwrite: true
+          publish-changes: true
+      
+      - name: 🤖 Publicar agente
+        run: |
+          $agents = pac copilot list --json | ConvertFrom-Json
+          $agent = $agents | Where-Object { $_.displayName -like "*RetailConFlow*" } | Select-Object -First 1
+          
+          if ($agent) {
+            pac copilot publish --copilot-id $agent.copilotId
+            Write-Host "✅ Agente publicado en PRODUCCIÓN"
+          }
+      
+      - name: 📢 Crear Release en GitHub
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: v${{ github.run_number }}
+          release_name: Release v${{ github.run_number }}
+          body: |
+            🚀 Despliegue automático a PRODUCCIÓN
+            
+            **Solución:** ${{ env.SOLUTION_NAME }}
+            **Commit:** ${{ github.sha }}
+            **Ambiente:** Production
+            
+            Cambios incluidos en este release:
+            ${{ github.event.head_commit.message }}
+          draft: false
+          prerelease: false
