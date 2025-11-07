@@ -17,8 +17,8 @@ Este documento describe cómo configurar y usar el control de código fuente (so
 
 El repositorio ya está preparado con la estructura necesaria:
 
-```
-agente-retail-ejemplo/
+```text
+Integrando-Microsoft-Copilot-Studio-con-GitHub/
 ├── solution/              # ← Carpeta monitoreada por Copilot Studio
 │   ├── bots/
 │   ├── botcomponents/
@@ -31,7 +31,7 @@ agente-retail-ejemplo/
 ### Paso 2: Conectar Copilot Studio con GitHub
 
 1. **Abrir Copilot Studio**
-   - URL: https://copilotstudio.microsoft.com
+   - URL: <https://copilotstudio.microsoft.com>
    - Seleccionar ambiente: Contoso (default)
 
 2. **Navegar a Settings**
@@ -43,15 +43,14 @@ agente-retail-ejemplo/
    - Autorizar acceso a GitHub
    - Seleccionar repositorio: `alemcuevas/Integrando-Microsoft-Copilot-Studio-con-GitHub`
    - Branch: `main`
-   - Folder path: `agente-retail-ejemplo/solution`
+   - Folder path: `solution`
 
 4. **Seleccionar Solución**
    - Solution: `MyRetailAgent`
    - Click en **Connect**
 
-### Paso 3: Sincronización Inicial
-
 Después de conectar, Copilot Studio:
+
 - ✅ Lee la estructura actual del repositorio
 - ✅ Compara con la solución en el ambiente
 - ✅ Muestra diferencias (si existen)
@@ -104,7 +103,7 @@ Después de conectar, Copilot Studio:
 
 Usar formato convencional:
 
-```
+```text
 feat: agregar topic de devoluciones
 fix: corregir flujo de escalamiento
 docs: actualizar documentación de flows
@@ -113,7 +112,7 @@ refactor: simplificar topic de precios
 
 ### Branch Strategy
 
-```
+```text
 main           ← Producción (protegido)
   ↑
   ├── develop  ← Desarrollo (testing)
@@ -126,6 +125,7 @@ main           ← Producción (protegido)
 ### Estructura de Commits
 
 Mantener commits atómicos:
+
 - ✅ Un topic por commit
 - ✅ Un fix específico por commit
 - ❌ Evitar commits masivos con múltiples cambios
@@ -135,10 +135,12 @@ Mantener commits atómicos:
 ### Revisar Cambios Pendientes
 
 **En Copilot Studio:**
+
 - Settings → Source control → **Changes**
 - Ver archivos modificados antes de commit
 
 **En CLI:**
+
 ```powershell
 git status
 git diff solution/
@@ -199,6 +201,7 @@ git pull origin main
 **Problema:** Cambios tanto en Studio como en GitHub
 
 **Solución:**
+
 1. Pull primero desde Studio
 2. Resolver conflictos manualmente
 3. Commit la resolución
@@ -208,6 +211,7 @@ git pull origin main
 **Problema:** "There are 44 unnecessary files"
 
 **Solución:**
+
 ```powershell
 pac solution unpack --allowDelete --clobber
 ```
@@ -217,6 +221,7 @@ pac solution unpack --allowDelete --clobber
 **Problema:** Commit en Studio pero no se ve en repo
 
 **Solución:**
+
 1. Verificar conexión: Settings → Source control
 2. Re-conectar si es necesario
 3. Verificar permisos de GitHub (write access)
@@ -233,7 +238,7 @@ pac solution unpack --allowDelete --clobber
 
 ### 🔧 Archivos en Source Control
 
-```
+```text
 solution/
 ├── bots/
 │   └── miemp_asistenteRetailConFlow/
