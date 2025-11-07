@@ -1,0 +1,61 @@
+{
+  "id": "greeting",
+  "name": "Greeting",
+  "displayName": "Saludo - Bienvenida",
+  "description": "Mensaje de bienvenida inicial para clientes",
+  "triggerPhrases": [
+    "Hola",
+    "Buenos días",
+    "Buenas tardes",
+    "Buenas noches",
+    "Saludos",
+    "Hey",
+    "Ayuda",
+    "Inicio",
+    "Comenzar",
+    "Empezar"
+  ],
+  "nodes": [
+    {
+      "id": "node1",
+      "type": "MessageNode",
+      "message": "¡Hola! 👋 Bienvenido a nuestra tienda. Soy tu asistente virtual de ventas.",
+      "next": "node2"
+    },
+    {
+      "id": "node2",
+      "type": "MessageNode",
+      "message": "Puedo ayudarte con:\n\n🔍 Buscar productos\n📦 Verificar disponibilidad\n💰 Consultar precios y promociones\n🎯 Recomendaciones personalizadas\n📍 Ubicaciones de tiendas\n↩️ Política de devoluciones",
+      "next": "node3"
+    },
+    {
+      "id": "node3",
+      "type": "QuestionNode",
+      "question": "¿En qué puedo ayudarte hoy?",
+      "options": [
+        {
+          "label": "Buscar un producto",
+          "value": "search_product",
+          "redirectToTopic": "product-inquiry"
+        },
+        {
+          "label": "Verificar disponibilidad",
+          "value": "check_stock",
+          "redirectToTopic": "check-inventory"
+        },
+        {
+          "label": "Ver promociones",
+          "value": "view_promos",
+          "redirectToTopic": "pricing-info"
+        },
+        {
+          "label": "Ubicación de tiendas",
+          "value": "store_location",
+          "redirectToTopic": "store-locations"
+        }
+      ]
+    }
+  ],
+  "isSystem": true,
+  "language": "es-ES"
+}

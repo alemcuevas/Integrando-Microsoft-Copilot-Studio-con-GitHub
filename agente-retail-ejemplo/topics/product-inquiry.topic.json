@@ -1,0 +1,189 @@
+{
+  "id": "product-inquiry",
+  "name": "ProductInquiry",
+  "displayName": "Consulta de Productos",
+  "description": "Ayuda a los clientes a buscar y obtener información sobre productos",
+  "triggerPhrases": [
+    "Buscar producto",
+    "Quiero comprar",
+    "Estoy buscando",
+    "Necesito",
+    "Tienen",
+    "Venden",
+    "Mostrar productos",
+    "Catálogo",
+    "Artículos",
+    "¿Qué productos tienen?"
+  ],
+  "nodes": [
+    {
+      "id": "node1",
+      "type": "MessageNode",
+      "message": "¡Perfecto! Te ayudaré a encontrar lo que buscas. 🔍",
+      "next": "node2"
+    },
+    {
+      "id": "node2",
+      "type": "QuestionNode",
+      "question": "¿Qué categoría de producto te interesa?",
+      "entityType": "ProductCategory",
+      "variable": "Topic.ProductCategory",
+      "options": [
+        {
+          "label": "📱 Electrónica",
+          "value": "electronica"
+        },
+        {
+          "label": "👕 Ropa y Accesorios",
+          "value": "ropa"
+        },
+        {
+          "label": "🏠 Hogar y Decoración",
+          "value": "hogar"
+        },
+        {
+          "label": "⚽ Deportes y Fitness",
+          "value": "deportes"
+        },
+        {
+          "label": "🎮 Juguetes y Juegos",
+          "value": "juguetes"
+        },
+        {
+          "label": "💄 Belleza y Cuidado Personal",
+          "value": "belleza"
+        },
+        {
+          "label": "🍎 Alimentos y Bebidas",
+          "value": "alimentos"
+        }
+      ],
+      "next": "node3"
+    },
+    {
+      "id": "node3",
+      "type": "MessageNode",
+      "message": "Excelente elección en {Topic.ProductCategory}. 👍",
+      "next": "node4"
+    },
+    {
+      "id": "node4",
+      "type": "QuestionNode",
+      "question": "¿Podrías darme más detalles sobre lo que buscas? Por ejemplo, marca, modelo, color, o características específicas.",
+      "variable": "Topic.ProductDetails",
+      "inputType": "text",
+      "next": "node5"
+    },
+    {
+      "id": "node5",
+      "type": "MessageNode",
+      "message": "Déjame buscar productos que coincidan con '{Topic.ProductDetails}' en nuestra categoría de {Topic.ProductCategory}... 🔎",
+      "next": "node6"
+    },
+    {
+      "id": "node6",
+      "type": "ActionNode",
+      "action": "SearchProducts",
+      "parameters": {
+        "category": "{Topic.ProductCategory}",
+        "searchTerm": "{Topic.ProductDetails}"
+      },
+      "output": "Topic.SearchResults",
+      "next": "node7"
+    },
+    {
+      "id": "node7",
+      "type": "ConditionNode",
+      "condition": "{Topic.SearchResults.Count} > 0",
+      "ifTrue": "node8",
+      "ifFalse": "node10"
+    },
+    {
+      "id": "node8",
+      "type": "MessageNode",
+      "message": "¡Encontré {Topic.SearchResults.Count} productos que podrían interesarte! 🎉\n\n{Topic.SearchResults.List}",
+      "next": "node9"
+    },
+    {
+      "id": "node9",
+      "type": "QuestionNode",
+      "question": "¿Te gustaría:\n\n1️⃣ Ver más detalles de algún producto\n2️⃣ Verificar disponibilidad\n3️⃣ Consultar precios y promociones\n4️⃣ Buscar algo diferente",
+      "options": [
+        {
+          "label": "Ver detalles",
+          "value": "details",
+          "next": "node11"
+        },
+        {
+          "label": "Verificar disponibilidad",
+          "value": "inventory",
+          "redirectToTopic": "check-inventory"
+        },
+        {
+          "label": "Precios y promociones",
+          "value": "pricing",
+          "redirectToTopic": "pricing-info"
+        },
+        {
+          "label": "Nueva búsqueda",
+          "value": "new_search",
+          "next": "node2"
+        }
+      ]
+    },
+    {
+      "id": "node10",
+      "type": "MessageNode",
+      "message": "Lo siento, no encontré productos que coincidan exactamente con tu búsqueda. 😕\n\n¿Te gustaría que te muestre productos similares o te ayudo con otra búsqueda?",
+      "next": "node12"
+    },
+    {
+      "id": "node11",
+      "type": "QuestionNode",
+      "question": "¿Qué producto te gustaría conocer en detalle? Escribe el nombre o número.",
+      "variable": "Topic.SelectedProduct",
+      "inputType": "text",
+      "next": "node13"
+    },
+    {
+      "id": "node12",
+      "type": "QuestionNode",
+      "question": "¿Qué prefieres?",
+      "options": [
+        {
+          "label": "Ver productos similares",
+          "value": "similar",
+          "redirectToTopic": "recommendations"
+        },
+        {
+          "label": "Nueva búsqueda",
+          "value": "new_search",
+          "next": "node2"
+        },
+        {
+          "label": "Hablar con un asesor",
+          "value": "escalate",
+          "redirectToTopic": "escalation"
+        }
+      ]
+    },
+    {
+      "id": "node13",
+      "type": "ActionNode",
+      "action": "GetProductDetails",
+      "parameters": {
+        "productId": "{Topic.SelectedProduct}"
+      },
+      "output": "Topic.ProductInfo",
+      "next": "node14"
+    },
+    {
+      "id": "node14",
+      "type": "MessageNode",
+      "message": "📦 **{Topic.ProductInfo.Name}**\n\n💰 Precio: ${Topic.ProductInfo.Price}\n📝 Descripción: {Topic.ProductInfo.Description}\n⭐ Calificación: {Topic.ProductInfo.Rating}/5\n\n{Topic.ProductInfo.Features}",
+      "next": "node9"
+    }
+  ],
+  "isSystem": false,
+  "language": "es-ES"
+}

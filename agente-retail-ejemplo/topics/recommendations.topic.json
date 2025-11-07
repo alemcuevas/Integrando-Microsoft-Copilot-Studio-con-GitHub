@@ -1,0 +1,171 @@
+{
+  "id": "recommendations",
+  "name": "Recommendations",
+  "displayName": "Recomendaciones de Productos",
+  "description": "Ofrece recomendaciones personalizadas basadas en preferencias del cliente",
+  "triggerPhrases": [
+    "Recomiéndame",
+    "Qué me sugieres",
+    "Qué me aconsejas",
+    "Productos similares",
+    "Algo parecido",
+    "Alternativas",
+    "Novedades",
+    "Lo más vendido",
+    "Tendencias"
+  ],
+  "nodes": [
+    {
+      "id": "node1",
+      "type": "MessageNode",
+      "message": "¡Me encanta ayudarte a encontrar el producto perfecto! 🎯",
+      "next": "node2"
+    },
+    {
+      "id": "node2",
+      "type": "QuestionNode",
+      "question": "¿Qué tipo de recomendación buscas?",
+      "options": [
+        {
+          "label": "🔥 Productos más vendidos",
+          "value": "bestsellers"
+        },
+        {
+          "label": "✨ Novedades",
+          "value": "new_arrivals"
+        },
+        {
+          "label": "🎯 Basado en un producto",
+          "value": "similar"
+        },
+        {
+          "label": "💡 Sorpréndeme",
+          "value": "surprise"
+        }
+      ],
+      "variable": "Topic.RecommendationType",
+      "next": "node3"
+    },
+    {
+      "id": "node3",
+      "type": "ConditionNode",
+      "condition": "{Topic.RecommendationType} = 'similar'",
+      "ifTrue": "node4",
+      "ifFalse": "node6"
+    },
+    {
+      "id": "node4",
+      "type": "QuestionNode",
+      "question": "¿Basado en qué producto te gustaría recibir recomendaciones?",
+      "variable": "Topic.BaseProduct",
+      "inputType": "text",
+      "next": "node5"
+    },
+    {
+      "id": "node5",
+      "type": "ActionNode",
+      "action": "GetSimilarProducts",
+      "parameters": {
+        "baseProduct": "{Topic.BaseProduct}"
+      },
+      "output": "Topic.Recommendations",
+      "next": "node7"
+    },
+    {
+      "id": "node6",
+      "type": "ActionNode",
+      "action": "GetRecommendations",
+      "parameters": {
+        "type": "{Topic.RecommendationType}"
+      },
+      "output": "Topic.Recommendations",
+      "next": "node7"
+    },
+    {
+      "id": "node7",
+      "type": "MessageNode",
+      "message": "✨ **Recomendaciones para ti**:\n\n{Topic.Recommendations.List}\n\n⭐ Todos estos productos tienen excelentes calificaciones de nuestros clientes.",
+      "next": "node8"
+    },
+    {
+      "id": "node8",
+      "type": "QuestionNode",
+      "question": "¿Alguno de estos productos te interesa?",
+      "options": [
+        {
+          "label": "Sí, quiero más información",
+          "value": "details",
+          "next": "node9"
+        },
+        {
+          "label": "Verificar disponibilidad",
+          "value": "inventory",
+          "redirectToTopic": "check-inventory"
+        },
+        {
+          "label": "Ver otras recomendaciones",
+          "value": "more",
+          "next": "node2"
+        },
+        {
+          "label": "No, gracias",
+          "value": "no",
+          "next": "node10"
+        }
+      ]
+    },
+    {
+      "id": "node9",
+      "type": "QuestionNode",
+      "question": "¿Cuál producto te gustaría conocer mejor?",
+      "variable": "Topic.SelectedProduct",
+      "inputType": "text",
+      "next": "node11"
+    },
+    {
+      "id": "node10",
+      "type": "MessageNode",
+      "message": "Sin problema. ¿Hay algo más en lo que pueda ayudarte? 😊"
+    },
+    {
+      "id": "node11",
+      "type": "ActionNode",
+      "action": "GetProductDetails",
+      "parameters": {
+        "productId": "{Topic.SelectedProduct}"
+      },
+      "output": "Topic.ProductDetails",
+      "next": "node12"
+    },
+    {
+      "id": "node12",
+      "type": "MessageNode",
+      "message": "📦 **{Topic.ProductDetails.Name}**\n\n💰 Precio: ${Topic.ProductDetails.Price}\n📝 {Topic.ProductDetails.Description}\n⭐ Calificación: {Topic.ProductDetails.Rating}/5 ({Topic.ProductDetails.ReviewCount} reseñas)\n\n✅ {Topic.ProductDetails.KeyFeatures}",
+      "next": "node13"
+    },
+    {
+      "id": "node13",
+      "type": "QuestionNode",
+      "question": "¿Qué te gustaría hacer?",
+      "options": [
+        {
+          "label": "Verificar disponibilidad",
+          "value": "inventory",
+          "redirectToTopic": "check-inventory"
+        },
+        {
+          "label": "Ver más productos",
+          "value": "more",
+          "next": "node2"
+        },
+        {
+          "label": "Hablar con un asesor",
+          "value": "escalate",
+          "redirectToTopic": "escalation"
+        }
+      ]
+    }
+  ],
+  "isSystem": false,
+  "language": "es-ES"
+}

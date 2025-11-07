@@ -1,0 +1,152 @@
+{
+  "id": "escalation",
+  "name": "Escalation",
+  "displayName": "Escalamiento a Agente Humano",
+  "description": "Transfiere la conversación a un agente humano cuando sea necesario",
+  "triggerPhrases": [
+    "Hablar con un humano",
+    "Agente humano",
+    "Persona real",
+    "Asesor",
+    "Representante",
+    "Ayuda de verdad",
+    "No me estás ayudando",
+    "Quiero hablar con alguien",
+    "Transferir",
+    "Comunicarme"
+  ],
+  "nodes": [
+    {
+      "id": "node1",
+      "type": "MessageNode",
+      "message": "Entiendo que necesitas ayuda más especializada. Te conectaré con uno de nuestros asesores. 👤",
+      "next": "node2"
+    },
+    {
+      "id": "node2",
+      "type": "QuestionNode",
+      "question": "Para ayudarte mejor, ¿podrías indicarme tu nombre?",
+      "variable": "Topic.CustomerName",
+      "inputType": "text",
+      "next": "node3"
+    },
+    {
+      "id": "node3",
+      "type": "QuestionNode",
+      "question": "Gracias, {Topic.CustomerName}. ¿Cuál es tu correo electrónico para seguimiento?",
+      "variable": "Topic.CustomerEmail",
+      "inputType": "email",
+      "next": "node4"
+    },
+    {
+      "id": "node4",
+      "type": "QuestionNode",
+      "question": "¿Podrías describirme brevemente en qué necesitas ayuda?",
+      "variable": "Topic.IssueDescription",
+      "inputType": "text",
+      "next": "node5"
+    },
+    {
+      "id": "node5",
+      "type": "MessageNode",
+      "message": "Perfecto, {Topic.CustomerName}. He registrado tu solicitud:\n\n📧 Email: {Topic.CustomerEmail}\n📝 Consulta: {Topic.IssueDescription}",
+      "next": "node6"
+    },
+    {
+      "id": "node6",
+      "type": "QuestionNode",
+      "question": "¿Cómo prefieres que te contactemos?",
+      "options": [
+        {
+          "label": "💬 Chat en vivo ahora",
+          "value": "chat"
+        },
+        {
+          "label": "📞 Llamada telefónica",
+          "value": "phone"
+        },
+        {
+          "label": "📧 Correo electrónico",
+          "value": "email"
+        },
+        {
+          "label": "💬 WhatsApp",
+          "value": "whatsapp"
+        }
+      ],
+      "variable": "Topic.ContactMethod",
+      "next": "node7"
+    },
+    {
+      "id": "node7",
+      "type": "ConditionNode",
+      "condition": "{Topic.ContactMethod} = 'chat'",
+      "ifTrue": "node8",
+      "ifFalse": "node9"
+    },
+    {
+      "id": "node8",
+      "type": "MessageNode",
+      "message": "¡Perfecto! Estoy transfiriendo tu conversación a un agente disponible...\n\n⏱️ Tiempo de espera aproximado: 2-3 minutos\n\nPor favor, no cierres esta ventana. Un asesor te atenderá pronto. 🙂",
+      "next": "node11"
+    },
+    {
+      "id": "node9",
+      "type": "ConditionNode",
+      "condition": "{Topic.ContactMethod} = 'phone'",
+      "ifTrue": "node10",
+      "ifFalse": "node12"
+    },
+    {
+      "id": "node10",
+      "type": "QuestionNode",
+      "question": "¿Cuál es tu número telefónico para que te contactemos?",
+      "variable": "Topic.CustomerPhone",
+      "inputType": "text",
+      "next": "node13"
+    },
+    {
+      "id": "node11",
+      "type": "ActionNode",
+      "action": "TransferToAgent",
+      "parameters": {
+        "customerName": "{Topic.CustomerName}",
+        "customerEmail": "{Topic.CustomerEmail}",
+        "issueDescription": "{Topic.IssueDescription}",
+        "conversationHistory": "{System.ConversationHistory}"
+      }
+    },
+    {
+      "id": "node12",
+      "type": "ConditionNode",
+      "condition": "{Topic.ContactMethod} = 'whatsapp'",
+      "ifTrue": "node14",
+      "ifFalse": "node15"
+    },
+    {
+      "id": "node13",
+      "type": "MessageNode",
+      "message": "Excelente, {Topic.CustomerName}. \n\n📞 Un asesor te llamará al {Topic.CustomerPhone} en los próximos 15-30 minutos.\n\n📧 También recibirás un email de confirmación en {Topic.CustomerEmail}.\n\n🎫 Tu número de ticket es: #{System.GenerateTicketNumber}\n\n¿Hay algo más en lo que pueda ayudarte mientras esperas?"
+    },
+    {
+      "id": "node14",
+      "type": "QuestionNode",
+      "question": "¿Cuál es tu número de WhatsApp?",
+      "variable": "Topic.WhatsAppNumber",
+      "inputType": "text",
+      "next": "node16"
+    },
+    {
+      "id": "node15",
+      "type": "MessageNode",
+      "message": "Perfecto. Un asesor responderá tu consulta por correo electrónico en las próximas 2-4 horas.\n\n📧 Enviaremos la respuesta a: {Topic.CustomerEmail}\n🎫 Tu número de ticket es: #{System.GenerateTicketNumber}\n\n¡Gracias por tu paciencia! 😊"
+    },
+    {
+      "id": "node16",
+      "type": "MessageNode",
+      "message": "¡Listo! Un asesor te escribirá por WhatsApp al {Topic.WhatsAppNumber} en breve.\n\n📧 También recibirás confirmación en: {Topic.CustomerEmail}\n🎫 Número de ticket: #{System.GenerateTicketNumber}\n\n💬 Tiempo estimado de respuesta: 10-20 minutos\n\n¿Necesitas ayuda con algo más?"
+    }
+  ],
+  "isSystem": true,
+  "language": "es-ES"
+}

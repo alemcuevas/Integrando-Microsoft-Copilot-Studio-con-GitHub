@@ -1,0 +1,90 @@
+{
+  "id": "StoreLocation",
+  "name": "StoreLocation",
+  "displayName": "Ubicación de Tienda",
+  "description": "Ubicaciones de las tiendas físicas y online",
+  "type": "ClosedList",
+  "items": [
+    {
+      "canonicalValue": "centro",
+      "synonyms": [
+        "tienda centro",
+        "sucursal centro",
+        "centro comercial",
+        "downtown",
+        "zona centro",
+        "principal",
+        "matriz"
+      ]
+    },
+    {
+      "canonicalValue": "norte",
+      "synonyms": [
+        "tienda norte",
+        "sucursal norte",
+        "zona norte",
+        "north",
+        "sector norte"
+      ]
+    },
+    {
+      "canonicalValue": "sur",
+      "synonyms": [
+        "tienda sur",
+        "sucursal sur",
+        "zona sur",
+        "south",
+        "sector sur"
+      ]
+    },
+    {
+      "canonicalValue": "este",
+      "synonyms": [
+        "tienda este",
+        "sucursal este",
+        "zona este",
+        "east",
+        "sector este",
+        "oriente"
+      ]
+    },
+    {
+      "canonicalValue": "oeste",
+      "synonyms": [
+        "tienda oeste",
+        "sucursal oeste",
+        "zona oeste",
+        "west",
+        "sector oeste",
+        "poniente"
+      ]
+    },
+    {
+      "canonicalValue": "online",
+      "synonyms": [
+        "tienda online",
+        "en línea",
+        "internet",
+        "web",
+        "página web",
+        "sitio web",
+        "e-commerce",
+        "virtual",
+        "digital"
+      ]
+    },
+    {
+      "canonicalValue": "all",
+      "synonyms": [
+        "todas",
+        "todas las tiendas",
+        "cualquiera",
+        "cualquier tienda",
+        "donde sea",
+        "en cualquier lugar",
+        "la más cercana"
+      ]
+    }
+  ],
+  "language": "es-ES"
+}

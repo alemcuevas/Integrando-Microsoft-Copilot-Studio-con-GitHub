@@ -1,0 +1,63 @@
+{
+  "id": "fallback",
+  "name": "Fallback",
+  "displayName": "Respuesta por Defecto",
+  "description": "Se activa cuando el bot no entiende la consulta del usuario",
+  "triggerPhrases": [],
+  "isFallback": true,
+  "nodes": [
+    {
+      "id": "node1",
+      "type": "MessageNode",
+      "message": "Disculpa, no estoy seguro de haber entendido tu consulta. 🤔",
+      "next": "node2"
+    },
+    {
+      "id": "node2",
+      "type": "MessageNode",
+      "message": "Puedo ayudarte con:\n\n🔍 **Buscar productos** - Encuentra lo que necesitas en nuestro catálogo\n📦 **Verificar disponibilidad** - Consulta stock en tiendas\n💰 **Precios y promociones** - Conoce ofertas actuales\n🎯 **Recomendaciones** - Descubre productos que te pueden interesar\n📍 **Ubicaciones** - Encuentra la tienda más cercana\n↩️ **Devoluciones** - Información sobre cambios y garantías\n👤 **Hablar con asesor** - Conecta con un agente humano",
+      "next": "node3"
+    },
+    {
+      "id": "node3",
+      "type": "QuestionNode",
+      "question": "¿Podrías reformular tu pregunta o seleccionar una de las opciones anteriores?",
+      "options": [
+        {
+          "label": "🔍 Buscar productos",
+          "value": "search",
+          "redirectToTopic": "product-inquiry"
+        },
+        {
+          "label": "📦 Verificar stock",
+          "value": "inventory",
+          "redirectToTopic": "check-inventory"
+        },
+        {
+          "label": "💰 Ver precios",
+          "value": "pricing",
+          "redirectToTopic": "pricing-info"
+        },
+        {
+          "label": "📍 Ubicaciones",
+          "value": "locations",
+          "redirectToTopic": "store-locations"
+        },
+        {
+          "label": "👤 Hablar con asesor",
+          "value": "agent",
+          "redirectToTopic": "escalation"
+        }
+      ],
+      "variable": "Topic.UserChoice",
+      "next": "node4"
+    },
+    {
+      "id": "node4",
+      "type": "MessageNode",
+      "message": "Si necesitas más ayuda, no dudes en escribir tu consulta nuevamente o seleccionar 'Hablar con asesor'. ¡Estoy aquí para ayudarte! 😊"
+    }
+  ],
+  "isSystem": true,
+  "language": "es-ES"
+}

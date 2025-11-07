@@ -1,0 +1,239 @@
+{
+  "id": "returns-policy",
+  "name": "ReturnsPolicy",
+  "displayName": "Política de Devoluciones",
+  "description": "Información sobre políticas de devolución, cambios y garantías",
+  "triggerPhrases": [
+    "Devolución",
+    "Devolver",
+    "Cambio",
+    "Garantía",
+    "Reembolso",
+    "Política de devolución",
+    "Puedo devolver",
+    "Cómo cambiar",
+    "Quiero cambiar",
+    "Producto defectuoso"
+  ],
+  "nodes": [
+    {
+      "id": "node1",
+      "type": "MessageNode",
+      "message": "Te ayudaré con información sobre devoluciones y cambios. 🔄",
+      "next": "node2"
+    },
+    {
+      "id": "node2",
+      "type": "QuestionNode",
+      "question": "¿Qué información necesitas?",
+      "options": [
+        {
+          "label": "📋 Política de devolución",
+          "value": "policy"
+        },
+        {
+          "label": "🔄 Hacer un cambio",
+          "value": "exchange"
+        },
+        {
+          "label": "💰 Solicitar reembolso",
+          "value": "refund"
+        },
+        {
+          "label": "⚠️ Producto defectuoso",
+          "value": "defective"
+        },
+        {
+          "label": "📜 Información de garantía",
+          "value": "warranty"
+        }
+      ],
+      "variable": "Topic.RequestType",
+      "next": "node3"
+    },
+    {
+      "id": "node3",
+      "type": "ConditionNode",
+      "condition": "{Topic.RequestType} = 'policy'",
+      "ifTrue": "node4",
+      "ifFalse": "node5"
+    },
+    {
+      "id": "node4",
+      "type": "MessageNode",
+      "message": "📋 **Política de Devolución**\n\n✅ **Plazo**: 30 días desde la compra\n📦 **Condiciones**: Producto sin usar, en empaque original\n🧾 **Requisitos**: Ticket o factura de compra\n💰 **Reembolso**: Mismo método de pago original\n🔄 **Cambios**: Sin costo adicional por talla/color\n\n❌ **Excepciones**:\n- Productos de higiene personal abiertos\n- Productos personalizados\n- Ofertas especiales (consultar términos)\n- Productos electrónicos activados\n\n¿Necesitas hacer una devolución o cambio?",
+      "next": "node9"
+    },
+    {
+      "id": "node5",
+      "type": "ConditionNode",
+      "condition": "{Topic.RequestType} = 'exchange'",
+      "ifTrue": "node6",
+      "ifFalse": "node7"
+    },
+    {
+      "id": "node6",
+      "type": "MessageNode",
+      "message": "🔄 **Proceso de Cambio**\n\n**Paso 1**: Verifica que el producto cumpla las condiciones\n**Paso 2**: Lleva el producto con tu ticket a cualquier tienda\n**Paso 3**: Nuestro equipo verificará el estado\n**Paso 4**: Realiza el cambio por otro producto\n\n⏱️ **Tiempo estimado**: 15-20 minutos en tienda\n✨ **Sin costo**: Los cambios por talla/color son gratuitos\n\n¿Necesitas la ubicación de una tienda?",
+      "next": "node10"
+    },
+    {
+      "id": "node7",
+      "type": "ConditionNode",
+      "condition": "{Topic.RequestType} = 'refund'",
+      "ifTrue": "node8",
+      "ifFalse": "node11"
+    },
+    {
+      "id": "node8",
+      "type": "MessageNode",
+      "message": "💰 **Proceso de Reembolso**\n\n**Para compras en tienda**:\n1. Lleva el producto con ticket original\n2. Reembolso en efectivo o al mismo método de pago\n3. Procesamiento inmediato\n\n**Para compras online**:\n1. Solicita devolución en www.mitienda.com/devoluciones\n2. Imprime etiqueta de envío gratuito\n3. Envía el paquete\n4. Reembolso en 5-7 días hábiles tras recepción\n\n📧 **Seguimiento**: Recibirás confirmación por email\n\n¿Fue compra en tienda o en línea?",
+      "next": "node12"
+    },
+    {
+      "id": "node9",
+      "type": "QuestionNode",
+      "question": "¿Deseas iniciar un proceso de devolución o cambio?",
+      "options": [
+        {
+          "label": "Sí, hacer cambio",
+          "value": "exchange",
+          "next": "node6"
+        },
+        {
+          "label": "Sí, solicitar reembolso",
+          "value": "refund",
+          "next": "node8"
+        },
+        {
+          "label": "Solo información",
+          "value": "info",
+          "next": "node15"
+        }
+      ]
+    },
+    {
+      "id": "node10",
+      "type": "QuestionNode",
+      "question": "¿Te gustaría conocer la ubicación de nuestras tiendas?",
+      "options": [
+        {
+          "label": "Sí, ver ubicaciones",
+          "value": "yes",
+          "redirectToTopic": "store-locations"
+        },
+        {
+          "label": "No, tengo otra consulta",
+          "value": "no",
+          "next": "node15"
+        }
+      ]
+    },
+    {
+      "id": "node11",
+      "type": "ConditionNode",
+      "condition": "{Topic.RequestType} = 'defective'",
+      "ifTrue": "node13",
+      "ifFalse": "node14"
+    },
+    {
+      "id": "node12",
+      "type": "QuestionNode",
+      "question": "Selecciona el tipo de compra:",
+      "options": [
+        {
+          "label": "Compra en tienda física",
+          "value": "store",
+          "next": "node16"
+        },
+        {
+          "label": "Compra en línea",
+          "value": "online",
+          "next": "node17"
+        }
+      ]
+    },
+    {
+      "id": "node13",
+      "type": "MessageNode",
+      "message": "⚠️ **Producto Defectuoso**\n\nLamentamos mucho esta situación. Para productos defectuosos:\n\n✅ **Cambio inmediato**: Sin importar el tiempo transcurrido si está en garantía\n🔍 **Evaluación**: Nuestro equipo técnico verificará el defecto\n🎁 **Compensación**: Cambio por producto nuevo o reembolso total\n⚡ **Prioridad**: Tu caso será atendido con prioridad\n\n📞 **Contacto directo**:\nLínea de Garantías: 01-800-GARANTIA (426-7268)\nEmail: garantias@mitienda.com\n\n¿Te gustaría que te conecte con un asesor especializado?",
+      "next": "node18"
+    },
+    {
+      "id": "node14",
+      "type": "MessageNode",
+      "message": "📜 **Información de Garantía**\n\n⏰ **Duración**:\n- Electrónica: 1 año\n- Electrodomésticos: 1-2 años (según fabricante)\n- Otros productos: 30-90 días\n\n✅ **Cubre**:\n- Defectos de fabricación\n- Mal funcionamiento sin causa del usuario\n- Daños en tránsito (primeros 7 días)\n\n❌ **No cubre**:\n- Daño por mal uso\n- Desgaste normal\n- Modificaciones no autorizadas\n\n📄 **Requisitos**: Ticket de compra y producto con empaques\n\n¿Necesitas aplicar tu garantía?",
+      "next": "node19"
+    },
+    {
+      "id": "node15",
+      "type": "MessageNode",
+      "message": "¿Hay algo más en lo que pueda ayudarte? 😊"
+    },
+    {
+      "id": "node16",
+      "type": "MessageNode",
+      "message": "Para compras en tienda, acércate a cualquiera de nuestras sucursales con:\n\n📋 Ticket de compra\n📦 Producto en su empaque original\n🆔 Identificación oficial\n\nEl reembolso será inmediato. ¿Te gustaría conocer nuestras ubicaciones?",
+      "next": "node10"
+    },
+    {
+      "id": "node17",
+      "type": "MessageNode",
+      "message": "Para compras en línea:\n\n1️⃣ Visita: www.mitienda.com/devoluciones\n2️⃣ Ingresa tu número de pedido\n3️⃣ Selecciona el producto\n4️⃣ Descarga e imprime la etiqueta de envío\n5️⃣ Lleva el paquete a la paquetería\n\n💰 El reembolso se procesará en 5-7 días hábiles.\n\n¿Necesitas ayuda con este proceso?",
+      "next": "node20"
+    },
+    {
+      "id": "node18",
+      "type": "QuestionNode",
+      "question": "¿Deseas hablar con un especialista en garantías?",
+      "options": [
+        {
+          "label": "Sí, conectarme ahora",
+          "value": "yes",
+          "redirectToTopic": "escalation"
+        },
+        {
+          "label": "No, tengo otra consulta",
+          "value": "no",
+          "next": "node15"
+        }
+      ]
+    },
+    {
+      "id": "node19",
+      "type": "QuestionNode",
+      "question": "¿Qué te gustaría hacer?",
+      "options": [
+        {
+          "label": "Aplicar garantía",
+          "value": "apply",
+          "next": "node13"
+        },
+        {
+          "label": "Solo consulta",
+          "value": "info",
+          "next": "node15"
+        }
+      ]
+    },
+    {
+      "id": "node20",
+      "type": "QuestionNode",
+      "question": "¿Necesitas ayuda adicional?",
+      "options": [
+        {
+          "label": "Sí, hablar con un asesor",
+          "value": "yes",
+          "redirectToTopic": "escalation"
+        },
+        {
+          "label": "No, es suficiente",
+          "value": "no",
+          "next": "node15"
+        }
+      ]
+    }
+  ],
+  "isSystem": false,
+  "language": "es-ES"
+}

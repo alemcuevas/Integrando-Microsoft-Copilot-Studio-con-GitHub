@@ -1,0 +1,33 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {},
+  "variables": {},
+  "resources": [],
+  "metadata": {
+    "schemaVersion": "1.0",
+    "displayName": "Agente de Retail - Asistente de Ventas",
+    "description": "Agente virtual para asistir a clientes en una tienda retail con consultas sobre productos, disponibilidad, precios y recomendaciones.",
+    "botId": "retail-assistant-bot",
+    "language": "es-ES",
+    "createdDate": "2025-11-06T00:00:00Z",
+    "modifiedDate": "2025-11-06T00:00:00Z",
+    "version": "1.0.0"
+  },
+  "properties": {
+    "displayName": "Agente de Retail - Asistente de Ventas",
+    "description": "Asistente virtual para retail",
+    "iconUrl": "",
+    "privacyUrl": "",
+    "termsOfUseUrl": "",
+    "schemaVersion": "1.0",
+    "templateVersion": "1.0",
+    "publishedBy": "",
+    "settings": {
+      "fallbackTopic": "Fallback",
+      "greetingTopic": "Greeting",
+      "escalationTopic": "Escalation",
+      "handoffTopic": "Handoff"
+    }
+  }
+}

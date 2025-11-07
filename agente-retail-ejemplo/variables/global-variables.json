@@ -1,0 +1,107 @@
+{
+  "schemaVersion": "1.0",
+  "variables": [
+    {
+      "id": "CustomerName",
+      "name": "CustomerName",
+      "displayName": "Nombre del Cliente",
+      "description": "Nombre del cliente que interactúa con el bot",
+      "type": "String",
+      "defaultValue": "",
+      "scope": "Global",
+      "isRequired": false
+    },
+    {
+      "id": "CustomerEmail",
+      "name": "CustomerEmail",
+      "displayName": "Email del Cliente",
+      "description": "Correo electrónico del cliente para seguimiento",
+      "type": "String",
+      "defaultValue": "",
+      "scope": "Global",
+      "isRequired": false
+    },
+    {
+      "id": "CustomerPhone",
+      "name": "CustomerPhone",
+      "displayName": "Teléfono del Cliente",
+      "description": "Número de teléfono del cliente",
+      "type": "String",
+      "defaultValue": "",
+      "scope": "Global",
+      "isRequired": false
+    },
+    {
+      "id": "PreferredCategory",
+      "name": "PreferredCategory",
+      "displayName": "Categoría Preferida",
+      "description": "Última categoría de producto consultada por el cliente",
+      "type": "String",
+      "entityType": "ProductCategory",
+      "defaultValue": "",
+      "scope": "Global",
+      "isRequired": false
+    },
+    {
+      "id": "PreferredLocation",
+      "name": "PreferredLocation",
+      "displayName": "Ubicación Preferida",
+      "description": "Tienda preferida del cliente",
+      "type": "String",
+      "entityType": "StoreLocation",
+      "defaultValue": "",
+      "scope": "Global",
+      "isRequired": false
+    },
+    {
+      "id": "CurrentProduct",
+      "name": "CurrentProduct",
+      "displayName": "Producto Actual",
+      "description": "Producto que el cliente está consultando actualmente",
+      "type": "String",
+      "defaultValue": "",
+      "scope": "Global",
+      "isRequired": false
+    },
+    {
+      "id": "SessionStartTime",
+      "name": "SessionStartTime",
+      "displayName": "Inicio de Sesión",
+      "description": "Marca de tiempo cuando inició la conversación",
+      "type": "DateTime",
+      "defaultValue": "{System.DateTime.Now}",
+      "scope": "Global",
+      "isRequired": false
+    },
+    {
+      "id": "ConversationCount",
+      "name": "ConversationCount",
+      "displayName": "Contador de Conversaciones",
+      "description": "Número de interacciones del cliente con el bot",
+      "type": "Number",
+      "defaultValue": 0,
+      "scope": "Global",
+      "isRequired": false
+    },
+    {
+      "id": "IsReturningCustomer",
+      "name": "IsReturningCustomer",
+      "displayName": "Cliente Recurrente",
+      "description": "Indica si el cliente ha interactuado previamente",
+      "type": "Boolean",
+      "defaultValue": false,
+      "scope": "Global",
+      "isRequired": false
+    },
+    {
+      "id": "CustomerSatisfaction",
+      "name": "CustomerSatisfaction",
+      "displayName": "Satisfacción del Cliente",
+      "description": "Nivel de satisfacción del cliente (1-5)",
+      "type": "Number",
+      "defaultValue": 0,
+      "scope": "Global",
+      "isRequired": false
+    }
+  ]
+}

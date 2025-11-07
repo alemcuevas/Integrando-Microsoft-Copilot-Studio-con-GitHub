@@ -1,0 +1,235 @@
+{
+  "id": "check-inventory",
+  "name": "CheckInventory",
+  "displayName": "Verificar Inventario",
+  "description": "Verifica la disponibilidad de productos en tienda y online",
+  "triggerPhrases": [
+    "Hay en stock",
+    "Disponibilidad",
+    "Tienen disponible",
+    "Está disponible",
+    "Hay existencias",
+    "En inventario",
+    "Verificar stock",
+    "Comprobar disponibilidad",
+    "¿Tienen en tienda?"
+  ],
+  "nodes": [
+    {
+      "id": "node1",
+      "type": "MessageNode",
+      "message": "Te ayudaré a verificar la disponibilidad del producto. 📦",
+      "next": "node2"
+    },
+    {
+      "id": "node2",
+      "type": "QuestionNode",
+      "question": "¿Qué producto quieres verificar? Por favor indica el nombre o código del artículo.",
+      "variable": "Topic.ProductToCheck",
+      "inputType": "text",
+      "next": "node3"
+    },
+    {
+      "id": "node3",
+      "type": "QuestionNode",
+      "question": "¿En qué ubicación te gustaría verificar la disponibilidad?",
+      "entityType": "StoreLocation",
+      "variable": "Topic.PreferredLocation",
+      "options": [
+        {
+          "label": "🏪 Tienda Centro",
+          "value": "centro"
+        },
+        {
+          "label": "🏪 Tienda Norte",
+          "value": "norte"
+        },
+        {
+          "label": "🏪 Tienda Sur",
+          "value": "sur"
+        },
+        {
+          "label": "🏪 Tienda Este",
+          "value": "este"
+        },
+        {
+          "label": "🏪 Tienda Oeste",
+          "value": "oeste"
+        },
+        {
+          "label": "🌐 Tienda Online",
+          "value": "online"
+        },
+        {
+          "label": "📍 Todas las ubicaciones",
+          "value": "all"
+        }
+      ],
+      "next": "node4"
+    },
+    {
+      "id": "node4",
+      "type": "MessageNode",
+      "message": "Verificando disponibilidad de '{Topic.ProductToCheck}' en {Topic.PreferredLocation}... ⏳",
+      "next": "node5"
+    },
+    {
+      "id": "node5",
+      "type": "ActionNode",
+      "action": "CheckInventory",
+      "parameters": {
+        "product": "{Topic.ProductToCheck}",
+        "location": "{Topic.PreferredLocation}"
+      },
+      "output": "Topic.InventoryStatus",
+      "next": "node6"
+    },
+    {
+      "id": "node6",
+      "type": "ConditionNode",
+      "condition": "{Topic.InventoryStatus.Available} = true",
+      "ifTrue": "node7",
+      "ifFalse": "node9"
+    },
+    {
+      "id": "node7",
+      "type": "MessageNode",
+      "message": "¡Buenas noticias! ✅\n\n📦 **Producto**: {Topic.InventoryStatus.ProductName}\n📍 **Ubicación**: {Topic.PreferredLocation}\n✅ **Estado**: Disponible\n📊 **Cantidad**: {Topic.InventoryStatus.Quantity} unidades en stock",
+      "next": "node8"
+    },
+    {
+      "id": "node8",
+      "type": "QuestionNode",
+      "question": "¿Te gustaría:\n\n1️⃣ Ver el precio y promociones\n2️⃣ Obtener la dirección de la tienda\n3️⃣ Reservar el producto\n4️⃣ Verificar otro producto",
+      "options": [
+        {
+          "label": "Ver precio",
+          "value": "pricing",
+          "redirectToTopic": "pricing-info"
+        },
+        {
+          "label": "Dirección de tienda",
+          "value": "location",
+          "redirectToTopic": "store-locations"
+        },
+        {
+          "label": "Reservar producto",
+          "value": "reserve",
+          "next": "node11"
+        },
+        {
+          "label": "Verificar otro producto",
+          "value": "check_another",
+          "next": "node2"
+        }
+      ]
+    },
+    {
+      "id": "node9",
+      "type": "MessageNode",
+      "message": "Lo siento, actualmente este producto no está disponible en {Topic.PreferredLocation}. 😔",
+      "next": "node10"
+    },
+    {
+      "id": "node10",
+      "type": "ConditionNode",
+      "condition": "{Topic.InventoryStatus.EstimatedRestock} != null",
+      "ifTrue": "node12",
+      "ifFalse": "node13"
+    },
+    {
+      "id": "node11",
+      "type": "MessageNode",
+      "message": "Para reservar este producto, por favor comunícate directamente con la tienda:\n\n📞 Tel: {Topic.InventoryStatus.StorePhone}\n📧 Email: {Topic.InventoryStatus.StoreEmail}\n\nO puedes hablar con uno de nuestros asesores ahora mismo.",
+      "next": "node14"
+    },
+    {
+      "id": "node12",
+      "type": "MessageNode",
+      "message": "📅 **Reabastecimiento estimado**: {Topic.InventoryStatus.EstimatedRestock}\n\n¿Te gustaría que verifiquemos la disponibilidad en otras tiendas o que te notifiquemos cuando esté disponible?",
+      "next": "node15"
+    },
+    {
+      "id": "node13",
+      "type": "MessageNode",
+      "message": "No tenemos información sobre cuándo estará disponible nuevamente.\n\n¿Te gustaría que verifiquemos en otras ubicaciones o te mostremos productos similares?",
+      "next": "node15"
+    },
+    {
+      "id": "node14",
+      "type": "QuestionNode",
+      "question": "¿Deseas hablar con un asesor?",
+      "options": [
+        {
+          "label": "Sí, conectar con asesor",
+          "value": "yes",
+          "redirectToTopic": "escalation"
+        },
+        {
+          "label": "No, gracias",
+          "value": "no",
+          "next": "node16"
+        }
+      ]
+    },
+    {
+      "id": "node15",
+      "type": "QuestionNode",
+      "question": "¿Qué prefieres?",
+      "options": [
+        {
+          "label": "Verificar en otras tiendas",
+          "value": "other_stores",
+          "next": "node17"
+        },
+        {
+          "label": "Ver productos similares",
+          "value": "similar",
+          "redirectToTopic": "recommendations"
+        },
+        {
+          "label": "Notificarme cuando esté disponible",
+          "value": "notify",
+          "next": "node18"
+        }
+      ]
+    },
+    {
+      "id": "node16",
+      "type": "MessageNode",
+      "message": "¿Hay algo más en lo que pueda ayudarte? 😊"
+    },
+    {
+      "id": "node17",
+      "type": "ActionNode",
+      "action": "CheckInventoryAllLocations",
+      "parameters": {
+        "product": "{Topic.ProductToCheck}"
+      },
+      "output": "Topic.AllLocationsInventory",
+      "next": "node19"
+    },
+    {
+      "id": "node18",
+      "type": "QuestionNode",
+      "question": "Para notificarte cuando el producto esté disponible, necesito tu email:",
+      "variable": "Topic.CustomerEmail",
+      "inputType": "email",
+      "next": "node20"
+    },
+    {
+      "id": "node19",
+      "type": "MessageNode",
+      "message": "📍 **Disponibilidad en todas nuestras tiendas**:\n\n{Topic.AllLocationsInventory}",
+      "next": "node8"
+    },
+    {
+      "id": "node20",
+      "type": "MessageNode",
+      "message": "¡Perfecto! Te enviaremos una notificación a {Topic.CustomerEmail} cuando '{Topic.ProductToCheck}' esté disponible. 📧✅",
+      "next": "node16"
+    }
+  ],
+  "isSystem": false,
+  "language": "es-ES"
+}

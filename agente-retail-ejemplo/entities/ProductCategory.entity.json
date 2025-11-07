@@ -1,0 +1,124 @@
+{
+  "id": "ProductCategory",
+  "name": "ProductCategory",
+  "displayName": "Categoría de Producto",
+  "description": "Categorías principales de productos disponibles en la tienda",
+  "type": "ClosedList",
+  "items": [
+    {
+      "canonicalValue": "electronica",
+      "synonyms": [
+        "electrónica",
+        "electrónico",
+        "tecnología",
+        "tech",
+        "gadgets",
+        "dispositivos",
+        "celulares",
+        "computadoras",
+        "tablets",
+        "audio",
+        "video"
+      ]
+    },
+    {
+      "canonicalValue": "ropa",
+      "synonyms": [
+        "ropa y accesorios",
+        "vestimenta",
+        "indumentaria",
+        "moda",
+        "fashion",
+        "prendas",
+        "ropa de hombre",
+        "ropa de mujer",
+        "ropa infantil",
+        "calzado",
+        "zapatos",
+        "tenis",
+        "zapatillas",
+        "accesorios"
+      ]
+    },
+    {
+      "canonicalValue": "hogar",
+      "synonyms": [
+        "hogar y decoración",
+        "casa",
+        "decoración",
+        "muebles",
+        "mobiliario",
+        "decorativo",
+        "cocina",
+        "baño",
+        "jardín",
+        "organización",
+        "textiles para el hogar"
+      ]
+    },
+    {
+      "canonicalValue": "deportes",
+      "synonyms": [
+        "deportes y fitness",
+        "deporte",
+        "fitness",
+        "ejercicio",
+        "gimnasio",
+        "gym",
+        "entrenamiento",
+        "actividad física",
+        "ropa deportiva",
+        "equipo deportivo",
+        "outdoor",
+        "aire libre"
+      ]
+    },
+    {
+      "canonicalValue": "juguetes",
+      "synonyms": [
+        "juguetes y juegos",
+        "juguetería",
+        "niños",
+        "infantil",
+        "bebés",
+        "juegos de mesa",
+        "videojuegos",
+        "gaming",
+        "consolas",
+        "entretenimiento infantil"
+      ]
+    },
+    {
+      "canonicalValue": "belleza",
+      "synonyms": [
+        "belleza y cuidado personal",
+        "cosméticos",
+        "maquillaje",
+        "skincare",
+        "cuidado de la piel",
+        "perfumería",
+        "fragancias",
+        "higiene",
+        "cuidado personal",
+        "salud y belleza"
+      ]
+    },
+    {
+      "canonicalValue": "alimentos",
+      "synonyms": [
+        "alimentos y bebidas",
+        "comida",
+        "bebidas",
+        "supermercado",
+        "abarrotes",
+        "despensa",
+        "snacks",
+        "botanas",
+        "dulces",
+        "gourmet",
+        "orgánicos"
+      ]
+    }
+  ],
+  "language": "es-ES"
+}

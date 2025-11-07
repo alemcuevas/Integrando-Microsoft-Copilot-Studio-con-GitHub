@@ -1,0 +1,182 @@
+{
+  "id": "store-locations",
+  "name": "StoreLocations",
+  "displayName": "Ubicaciones y Horarios",
+  "description": "Proporciona información sobre ubicaciones de tiendas y horarios de atención",
+  "triggerPhrases": [
+    "Dónde están",
+    "Ubicación",
+    "Dirección",
+    "Sucursal",
+    "Tiendas",
+    "Horario",
+    "A qué hora abren",
+    "A qué hora cierran",
+    "¿Dónde quedan?",
+    "Locales"
+  ],
+  "nodes": [
+    {
+      "id": "node1",
+      "type": "MessageNode",
+      "message": "Te ayudaré a encontrar la tienda más cercana. 📍",
+      "next": "node2"
+    },
+    {
+      "id": "node2",
+      "type": "QuestionNode",
+      "question": "¿Qué información necesitas?",
+      "options": [
+        {
+          "label": "📍 Ver todas las ubicaciones",
+          "value": "all"
+        },
+        {
+          "label": "🔍 Buscar tienda cercana",
+          "value": "nearest"
+        },
+        {
+          "label": "🕐 Horarios de atención",
+          "value": "hours"
+        },
+        {
+          "label": "📞 Información de contacto",
+          "value": "contact"
+        }
+      ],
+      "variable": "Topic.InfoType",
+      "next": "node3"
+    },
+    {
+      "id": "node3",
+      "type": "ConditionNode",
+      "condition": "{Topic.InfoType} = 'all'",
+      "ifTrue": "node4",
+      "ifFalse": "node5"
+    },
+    {
+      "id": "node4",
+      "type": "MessageNode",
+      "message": "🏪 **Nuestras Tiendas**:\n\n**Tienda Centro**\n📍 Av. Principal 123, Centro\n🕐 Lun-Sáb: 9:00 AM - 9:00 PM | Dom: 10:00 AM - 6:00 PM\n📞 (555) 123-4567\n\n**Tienda Norte**\n📍 Blvd. Norte 456, Zona Norte\n🕐 Lun-Dom: 10:00 AM - 8:00 PM\n📞 (555) 234-5678\n\n**Tienda Sur**\n📍 Calle Sur 789, Zona Sur\n🕐 Lun-Sáb: 9:00 AM - 9:00 PM | Dom: 10:00 AM - 7:00 PM\n📞 (555) 345-6789\n\n**Tienda Este**\n📍 Av. Este 321, Zona Este\n🕐 Lun-Dom: 9:00 AM - 9:00 PM\n📞 (555) 456-7890\n\n**Tienda Oeste**\n📍 Calle Oeste 654, Zona Oeste\n🕐 Lun-Sáb: 10:00 AM - 8:00 PM | Dom: 11:00 AM - 6:00 PM\n📞 (555) 567-8901",
+      "next": "node9"
+    },
+    {
+      "id": "node5",
+      "type": "ConditionNode",
+      "condition": "{Topic.InfoType} = 'nearest'",
+      "ifTrue": "node6",
+      "ifFalse": "node8"
+    },
+    {
+      "id": "node6",
+      "type": "QuestionNode",
+      "question": "¿En qué zona te encuentras o prefieres?",
+      "entityType": "StoreLocation",
+      "options": [
+        {
+          "label": "Centro",
+          "value": "centro"
+        },
+        {
+          "label": "Norte",
+          "value": "norte"
+        },
+        {
+          "label": "Sur",
+          "value": "sur"
+        },
+        {
+          "label": "Este",
+          "value": "este"
+        },
+        {
+          "label": "Oeste",
+          "value": "oeste"
+        }
+      ],
+      "variable": "Topic.PreferredZone",
+      "next": "node7"
+    },
+    {
+      "id": "node7",
+      "type": "ActionNode",
+      "action": "GetStoreInfo",
+      "parameters": {
+        "zone": "{Topic.PreferredZone}"
+      },
+      "output": "Topic.StoreInfo",
+      "next": "node10"
+    },
+    {
+      "id": "node8",
+      "type": "ConditionNode",
+      "condition": "{Topic.InfoType} = 'hours'",
+      "ifTrue": "node11",
+      "ifFalse": "node12"
+    },
+    {
+      "id": "node9",
+      "type": "QuestionNode",
+      "question": "¿Necesitas algo más?",
+      "options": [
+        {
+          "label": "Cómo llegar a una tienda",
+          "value": "directions",
+          "next": "node6"
+        },
+        {
+          "label": "Verificar disponibilidad",
+          "value": "inventory",
+          "redirectToTopic": "check-inventory"
+        },
+        {
+          "label": "Volver al menú",
+          "value": "menu",
+          "redirectToTopic": "greeting"
+        }
+      ]
+    },
+    {
+      "id": "node10",
+      "type": "MessageNode",
+      "message": "🏪 **Tienda {Topic.StoreInfo.Name}**\n\n📍 Dirección: {Topic.StoreInfo.Address}\n🕐 Horario: {Topic.StoreInfo.Hours}\n📞 Teléfono: {Topic.StoreInfo.Phone}\n📧 Email: {Topic.StoreInfo.Email}\n\n🗺️ Ver en Google Maps: {Topic.StoreInfo.MapsLink}",
+      "next": "node9"
+    },
+    {
+      "id": "node11",
+      "type": "MessageNode",
+      "message": "🕐 **Horarios de atención**:\n\n**Lunes a Sábado**: 9:00 AM - 9:00 PM (mayoría de tiendas)\n**Domingos**: 10:00 AM - 6:00 PM\n\n⚠️ Los horarios pueden variar según la ubicación y días festivos.\n\n¿Te gustaría conocer el horario de una tienda específica?",
+      "next": "node13"
+    },
+    {
+      "id": "node12",
+      "type": "MessageNode",
+      "message": "📞 **Contacto**:\n\n🌐 Sitio web: www.mitienda.com\n📧 Email: contacto@mitienda.com\n📱 WhatsApp: (555) 999-0000\n📞 Línea de atención: 01-800-123-4567\n💬 Chat en vivo: Disponible en nuestro sitio web\n\n¿Necesitas contactar con alguna tienda en específico?",
+      "next": "node13"
+    },
+    {
+      "id": "node13",
+      "type": "QuestionNode",
+      "question": "¿Qué prefieres?",
+      "options": [
+        {
+          "label": "Sí, información de una tienda",
+          "value": "yes",
+          "next": "node6"
+        },
+        {
+          "label": "No, es todo",
+          "value": "no",
+          "next": "node14"
+        }
+      ]
+    },
+    {
+      "id": "node14",
+      "type": "MessageNode",
+      "message": "¡Perfecto! ¿Hay algo más en lo que pueda ayudarte? 😊"
+    }
+  ],
+  "isSystem": false,
+  "language": "es-ES"
+}
