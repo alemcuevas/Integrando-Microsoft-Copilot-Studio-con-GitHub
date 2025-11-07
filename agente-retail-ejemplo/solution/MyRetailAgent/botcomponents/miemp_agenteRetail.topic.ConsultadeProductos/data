@@ -1,0 +1,52 @@
+kind: AdaptiveDialog
+beginDialog:
+  kind: OnRecognizedIntent
+  id: main
+  intent:
+    displayName: Consulta de Productos
+    includeInOnSelectIntent: true
+    triggerQueries:
+      - quiero ver productos
+      - mostrar productos
+      - qué productos tienen
+      - ver catálogo
+      - productos disponibles
+      - buscar producto
+
+  actions:
+    - kind: SendActivity
+      id: sendMessage_intro
+      activity: Por supuesto, puedo ayudarte a encontrar el producto perfecto. ¿Qué categoría te interesa?
+
+    - kind: Question
+      id: question_category
+      variable: Topic.ProductCategory
+      prompt: Selecciona una categoría
+      entity:
+        items:
+          - displayName: Electrónica
+            id: electronica
+
+          - displayName: Ropa y Accesorios
+            id: ropa
+
+          - displayName: Hogar y Cocina
+            id: hogar
+
+          - displayName: Deportes
+            id: deportes
+
+          - displayName: Juguetes
+            id: juguetes
+
+          - displayName: Belleza y Cuidado Personal
+            id: belleza
+
+          - displayName: Alimentos y Bebidas
+            id: alimentos
+
+        kind: ClosedListEntity
+
+    - kind: SendActivity
+      id: sendMessage_result
+      activity: Excelente elección. Te mostraré nuestros productos de {Topic.ProductCategory}. ¿Necesitas más información sobre algún producto específico?

@@ -1,0 +1,11 @@
+<botcomponent schemaname="miemp_agenteRetail.topic.UbicacionesdeTiendas">
+  <componenttype>9</componenttype>
+  <description>Proporciona información sobre ubicaciones de tiendas</description>
+  <iscustomizable>1</iscustomizable>
+  <name>Ubicaciones de Tiendas</name>
+  <parentbotid>
+    <schemaname>miemp_agenteRetail</schemaname>
+  </parentbotid>
+  <statecode>0</statecode>
+  <statuscode>1</statuscode>
+</botcomponent>

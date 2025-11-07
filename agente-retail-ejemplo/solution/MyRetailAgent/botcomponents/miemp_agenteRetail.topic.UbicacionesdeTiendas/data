@@ -1,0 +1,26 @@
+kind: AdaptiveDialog
+beginDialog:
+  kind: OnRecognizedIntent
+  id: main
+  intent:
+    displayName: Ubicaciones de Tiendas
+    includeInOnSelectIntent: true
+    triggerQueries:
+      - dónde están ubicados
+      - ubicación de tienda
+      - dirección
+      - sucursales
+      - tiendas físicas
+
+  actions:
+    - kind: SendActivity
+      id: sendMessage_stores
+      activity: |
+        Contamos con las siguientes tiendas:
+
+        📍 Tienda Centro - Av. Principal 123
+        📍 Tienda Norte - Calle Norte 456
+        📍 Tienda Sur - Av. Sur 789
+        📍 Tienda Este - Boulevard Este 321
+        📍 Tienda Oeste - Calle Oeste 654
+        🌐 Tienda Online - www.tienda.com

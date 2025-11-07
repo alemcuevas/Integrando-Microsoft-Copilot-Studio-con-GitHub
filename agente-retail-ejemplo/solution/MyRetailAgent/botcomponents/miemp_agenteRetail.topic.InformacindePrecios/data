@@ -1,0 +1,24 @@
+kind: AdaptiveDialog
+beginDialog:
+  kind: OnRecognizedIntent
+  id: main
+  intent:
+    displayName: Información de Precios
+    includeInOnSelectIntent: true
+    triggerQueries:
+      - cuánto cuesta
+      - precio
+      - consultar precio
+      - valor
+      - qué precio tiene
+
+  actions:
+    - kind: Question
+      id: question_product
+      variable: Topic.ProductForPrice
+      prompt: ¿De qué producto deseas conocer el precio?
+      entity: StringPrebuiltEntity
+
+    - kind: SendActivity
+      id: sendMessage_price
+      activity: El precio de {Topic.ProductForPrice} es $XX.XX. Actualmente tenemos promociones especiales. ¿Te gustaría conocer más detalles?

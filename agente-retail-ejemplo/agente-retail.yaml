@@ -1,0 +1,20 @@
+templateName: AgenteRetailTemplate
+templateVersion: 1.0.0
+description: Agente virtual para retail
+
+topics:
+  - name: Greeting
+    displayName: Saludo - Bienvenida
+    triggerPhrases:
+      - Hola
+      - Buenos días
+      - Buenas tardes
+      - Hey
+      - Ayuda
+    nodes:
+      - id: greeting1
+        type: message
+        message: ¡Hola! 👋 Bienvenido a nuestra tienda. Soy tu asistente virtual de ventas.
+      - id: greeting2
+        type: message
+        message: Puedo ayudarte con búsqueda de productos, precios, disponibilidad y más.

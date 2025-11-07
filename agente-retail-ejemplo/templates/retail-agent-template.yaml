@@ -1,0 +1,402 @@
+kind: BotDefinition
+entity:
+  accessControlPolicy: ChatbotReaders
+  authenticationMode: Integrated
+  authenticationTrigger: Always
+  configuration:
+    settings:
+      GenerativeActionsEnabled: true
+
+  template: RetailAgentTemplate-1.0.0
+
+components:
+  # ============================================
+  # TOPIC: Greeting (Saludo)
+  # ============================================
+  - kind: DialogComponent
+    managedProperties:
+      isCustomizable: true
+
+    displayName: Saludo
+    description: Topic de bienvenida para el agente de retail
+    shareContext: {}
+    state: Active
+    status: Active
+    schemaName: template-content.topic.Saludo
+    dialog:
+      beginDialog:
+        kind: OnRecognizedIntent
+        id: main
+        intent:
+          displayName: Saludo
+          includeInOnSelectIntent: false
+          triggerQueries:
+            - hola
+            - buenos días
+            - buenas tardes
+            - buenas noches
+            - qué tal
+            - saludos
+
+        actions:
+          - kind: SendActivity
+            id: sendMessage_greeting
+            activity:
+              text:
+                - ¡Bienvenido a nuestra tienda! Soy tu asistente virtual de ventas. Estoy aquí para ayudarte con información sobre productos, precios, inventario y más.
+              speak:
+                - Bienvenido a nuestra tienda. ¿En qué puedo ayudarte hoy?
+
+          - kind: SendActivity
+            id: sendMessage_options
+            activity:
+              attachmentLayout: carousel
+              attachments:
+                - contentType: application/vnd.microsoft.card.hero
+                  content:
+                    title: Ver Productos
+                    text: Explora nuestro catálogo
+                    buttons:
+                      - type: imBack
+                        title: Ver productos
+                        value: quiero ver productos
+
+                - contentType: application/vnd.microsoft.card.hero
+                  content:
+                    title: Verificar Inventario
+                    text: Consulta disponibilidad
+                    buttons:
+                      - type: imBack
+                        title: Verificar stock
+                        value: verificar inventario
+
+                - contentType: application/vnd.microsoft.card.hero
+                  content:
+                    title: Consultar Precios
+                    text: Información de precios
+                    buttons:
+                      - type: imBack
+                        title: Ver precios
+                        value: consultar precio
+
+  # ============================================
+  # TOPIC: Product Inquiry (Consulta de Productos)
+  # ============================================
+  - kind: DialogComponent
+    managedProperties:
+      isCustomizable: true
+
+    displayName: Consulta de Productos
+    description: Permite al usuario consultar información sobre productos
+    shareContext: {}
+    state: Active
+    status: Active
+    schemaName: template-content.topic.ProductInquiry
+    dialog:
+      beginDialog:
+        kind: OnRecognizedIntent
+        id: main
+        intent:
+          displayName: Consulta de Productos
+          includeInOnSelectIntent: true
+          triggerQueries:
+            - quiero ver productos
+            - mostrar productos
+            - qué productos tienen
+            - ver catálogo
+            - productos disponibles
+            - buscar producto
+
+        actions:
+          - kind: SendActivity
+            id: sendMessage_intro
+            activity: Por supuesto, puedo ayudarte a encontrar el producto perfecto. ¿Qué categoría te interesa?
+
+          - kind: Question
+            id: question_category
+            variable: Topic.ProductCategory
+            prompt: Selecciona una categoría
+            entity:
+              kind: ClosedListEntity
+              items:
+                - id: electronica
+                  displayName: Electrónica
+                - id: ropa
+                  displayName: Ropa y Accesorios
+                - id: hogar
+                  displayName: Hogar y Cocina
+                - id: deportes
+                  displayName: Deportes
+                - id: juguetes
+                  displayName: Juguetes
+                - id: belleza
+                  displayName: Belleza y Cuidado Personal
+                - id: alimentos
+                  displayName: Alimentos y Bebidas
+
+          - kind: SendActivity
+            id: sendMessage_result
+            activity: Excelente elección. Te mostraré nuestros productos de {Topic.ProductCategory}. ¿Necesitas más información sobre algún producto específico?
+
+  # ============================================
+  # TOPIC: Check Inventory (Verificar Inventario)
+  # ============================================
+  - kind: DialogComponent
+    managedProperties:
+      isCustomizable: true
+
+    displayName: Verificar Inventario
+    description: Permite verificar la disponibilidad de productos en tiendas
+    shareContext: {}
+    state: Active
+    status: Active
+    schemaName: template-content.topic.CheckInventory
+    dialog:
+      beginDialog:
+        kind: OnRecognizedIntent
+        id: main
+        intent:
+          displayName: Verificar Inventario
+          includeInOnSelectIntent: true
+          triggerQueries:
+            - verificar inventario
+            - hay stock
+            - disponibilidad
+            - tienen en stock
+            - está disponible
+
+        actions:
+          - kind: Question
+            id: question_product
+            variable: Topic.ProductName
+            prompt: ¿Qué producto te gustaría verificar?
+            entity: StringPrebuiltEntity
+
+          - kind: Question
+            id: question_location
+            variable: Topic.StoreLocation
+            prompt: ¿En qué tienda deseas verificar?
+            entity:
+              kind: ClosedListEntity
+              items:
+                - id: centro
+                  displayName: Tienda Centro
+                - id: norte
+                  displayName: Tienda Norte
+                - id: sur
+                  displayName: Tienda Sur
+                - id: este
+                  displayName: Tienda Este
+                - id: oeste
+                  displayName: Tienda Oeste
+                - id: online
+                  displayName: Tienda Online
+
+          - kind: SendActivity
+            id: sendMessage_checking
+            activity: Verificando disponibilidad de {Topic.ProductName} en {Topic.StoreLocation}...
+
+          - kind: SendActivity
+            id: sendMessage_result
+            activity: El producto está disponible en {Topic.StoreLocation}. ¿Te gustaría conocer el precio o hacer alguna otra consulta?
+
+  # ============================================
+  # TOPIC: Pricing Info (Información de Precios)
+  # ============================================
+  - kind: DialogComponent
+    managedProperties:
+      isCustomizable: true
+
+    displayName: Información de Precios
+    description: Proporciona información sobre precios de productos
+    shareContext: {}
+    state: Active
+    status: Active
+    schemaName: template-content.topic.PricingInfo
+    dialog:
+      beginDialog:
+        kind: OnRecognizedIntent
+        id: main
+        intent:
+          displayName: Información de Precios
+          includeInOnSelectIntent: true
+          triggerQueries:
+            - cuánto cuesta
+            - precio
+            - consultar precio
+            - valor
+            - qué precio tiene
+
+        actions:
+          - kind: Question
+            id: question_product
+            variable: Topic.ProductForPrice
+            prompt: ¿De qué producto deseas conocer el precio?
+            entity: StringPrebuiltEntity
+
+          - kind: SendActivity
+            id: sendMessage_price
+            activity: El precio de {Topic.ProductForPrice} es $XX.XX. Actualmente tenemos promociones especiales. ¿Te gustaría conocer más detalles?
+
+  # ============================================
+  # TOPIC: Store Locations (Ubicaciones de Tiendas)
+  # ============================================
+  - kind: DialogComponent
+    managedProperties:
+      isCustomizable: true
+
+    displayName: Ubicaciones de Tiendas
+    description: Proporciona información sobre ubicaciones de tiendas
+    shareContext: {}
+    state: Active
+    status: Active
+    schemaName: template-content.topic.StoreLocations
+    dialog:
+      beginDialog:
+        kind: OnRecognizedIntent
+        id: main
+        intent:
+          displayName: Ubicaciones de Tiendas
+          includeInOnSelectIntent: true
+          triggerQueries:
+            - dónde están ubicados
+            - ubicación de tienda
+            - dirección
+            - sucursales
+            - tiendas físicas
+
+        actions:
+          - kind: SendActivity
+            id: sendMessage_stores
+            activity: |
+              Contamos con las siguientes tiendas:
+              
+              📍 Tienda Centro - Av. Principal 123
+              📍 Tienda Norte - Calle Norte 456
+              📍 Tienda Sur - Av. Sur 789
+              📍 Tienda Este - Boulevard Este 321
+              📍 Tienda Oeste - Calle Oeste 654
+              🌐 Tienda Online - www.tienda.com
+
+  # ============================================
+  # TOPIC: Escalate (Transferir a Agente)
+  # ============================================
+  - kind: DialogComponent
+    managedProperties:
+      isCustomizable: true
+
+    displayName: Transferir a Agente Humano
+    description: Permite escalar la conversación a un agente humano
+    shareContext: {}
+    state: Active
+    status: Active
+    schemaName: template-content.topic.EscalateRetail
+    dialog:
+      startBehavior: CancelOtherTopics
+      beginDialog:
+        kind: OnEscalate
+        id: main
+        intent:
+          displayName: Transferir a Agente
+          includeInOnSelectIntent: true
+          triggerQueries:
+            - hablar con agente
+            - transferir a humano
+            - quiero hablar con alguien
+            - atención al cliente
+            - necesito ayuda personal
+
+        actions:
+          - kind: SendActivity
+            id: sendMessage_escalate
+            conversationOutcome: Escalated
+            activity: Entiendo que prefieres hablar con un representante. Te estoy transfiriendo ahora. ¿Hay algo más en lo que pueda ayudarte mientras esperas?
+
+  # ============================================
+  # SYSTEM TOPICS (mantener los del template base)
+  # ============================================
+  - kind: DialogComponent
+    managedProperties:
+      isCustomizable: false
+
+    displayName: Fallback
+    description: This system topic triggers when the user's utterance does not match any existing topics.
+    shareContext: {}
+    state: Active
+    status: Active
+    schemaName: template-content.topic.Fallback
+    dialog:
+      beginDialog:
+        kind: OnUnknownIntent
+        id: main
+        actions:
+          - kind: ConditionGroup
+            id: conditionGroup_fallback
+            conditions:
+              - id: conditionItem_fallback
+                condition: =System.FallbackCount < 3
+                actions:
+                  - kind: SendActivity
+                    id: sendMessage_fallback
+                    activity: Lo siento, no entendí tu consulta. ¿Podrías reformularla? Puedo ayudarte con productos, precios, inventario o ubicaciones de tiendas.
+
+            elseActions:
+              - kind: BeginDialog
+                id: escalate_fallback
+                dialog: template-content.topic.EscalateRetail
+
+  - kind: DialogComponent
+    managedProperties:
+      isCustomizable: false
+
+    displayName: Conversation Start
+    description: This system topic triggers when the agent receives an Activity indicating the beginning of a new conversation.
+    shareContext: {}
+    state: Active
+    status: Active
+    schemaName: template-content.topic.ConversationStart
+    dialog:
+      beginDialog:
+        kind: OnConversationStart
+        id: main
+        actions:
+          - kind: SendActivity
+            id: sendMessage_start
+            activity:
+              text:
+                - ¡Hola! Soy el Asistente Virtual de Retail. Puedo ayudarte con información sobre productos, precios, inventario y ubicaciones de tiendas. ¿En qué puedo ayudarte hoy?
+              speak:
+                - Hola y gracias por contactarnos. ¿Cómo puedo ayudarte hoy?
+
+  - kind: DialogComponent
+    managedProperties:
+      isCustomizable: false
+
+    displayName: On Error
+    description: This system topic triggers when the agent encounters an error.
+    shareContext: {}
+    state: Active
+    status: Active
+    schemaName: template-content.topic.OnError
+    dialog:
+      startBehavior: UseLatestPublishedContentAndCancelOtherTopics
+      beginDialog:
+        kind: OnError
+        id: main
+        actions:
+          - kind: SetVariable
+            id: setVariable_timestamp
+            variable: init:Topic.CurrentTime
+            value: =Text(Now(), DateTimeFormat.UTC)
+
+          - kind: SendActivity
+            id: sendMessage_error
+            activity: Ha ocurrido un error. Por favor, intenta nuevamente. Si el problema persiste, contáctanos.
+
+          - kind: LogCustomTelemetryEvent
+            id: log_error
+            eventName: RetailAgentError
+            properties: "={ErrorMessage: System.Error.Message, ErrorCode: System.Error.Code, TimeUTC: Topic.CurrentTime, ConversationId: System.Conversation.Id}"
+
+          - kind: CancelAllDialogs
+            id: cancel_on_error

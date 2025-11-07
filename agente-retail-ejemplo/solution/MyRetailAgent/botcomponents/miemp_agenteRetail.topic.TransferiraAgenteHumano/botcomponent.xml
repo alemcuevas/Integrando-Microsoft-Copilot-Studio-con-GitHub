@@ -1,0 +1,11 @@
+<botcomponent schemaname="miemp_agenteRetail.topic.TransferiraAgenteHumano">
+  <componenttype>9</componenttype>
+  <description>Permite escalar la conversación a un agente humano</description>
+  <iscustomizable>1</iscustomizable>
+  <name>Transferir a Agente Humano</name>
+  <parentbotid>
+    <schemaname>miemp_agenteRetail</schemaname>
+  </parentbotid>
+  <statecode>0</statecode>
+  <statuscode>1</statuscode>
+</botcomponent>

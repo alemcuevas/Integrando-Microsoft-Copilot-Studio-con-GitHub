@@ -1,0 +1,19 @@
+kind: AdaptiveDialog
+beginDialog:
+  kind: OnUnknownIntent
+  id: main
+  actions:
+    - kind: ConditionGroup
+      id: conditionGroup_fallback
+      conditions:
+        - id: conditionItem_fallback
+          condition: =System.FallbackCount < 3
+          actions:
+            - kind: SendActivity
+              id: sendMessage_fallback
+              activity: Lo siento, no entendí tu consulta. ¿Podrías reformularla? Puedo ayudarte con productos, precios, inventario o ubicaciones de tiendas.
+
+      elseActions:
+        - kind: BeginDialog
+          id: escalate_fallback
+          dialog: miemp_agenteRetail.topic.TransferiraAgenteHumano

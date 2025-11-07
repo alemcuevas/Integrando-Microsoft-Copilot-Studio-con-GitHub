@@ -1,0 +1,62 @@
+kind: AdaptiveDialog
+beginDialog:
+  kind: OnRecognizedIntent
+  id: main
+  intent:
+    displayName: Saludo
+    includeInOnSelectIntent: false
+    triggerQueries:
+      - hola
+      - buenos días
+      - buenas tardes
+      - buenas noches
+      - qué tal
+      - saludos
+
+  actions:
+    - kind: SendActivity
+      id: sendMessage_greeting
+      activity:
+        text:
+          - ¡Bienvenido a nuestra tienda! Soy tu asistente virtual de ventas. Estoy aquí para ayudarte con información sobre productos, precios, inventario y más.
+        speak:
+          - Bienvenido a nuestra tienda. ¿En qué puedo ayudarte hoy?
+
+    - kind: SendActivity
+      id: sendMessage_options
+      activity:
+        attachments:
+          - content:
+              buttons:
+                - title: Ver productos
+                  type: imBack
+                  value: quiero ver productos
+
+              text: Explora nuestro catálogo
+              title: Ver Productos
+
+            contentType: application/vnd.microsoft.card.hero
+
+          - content:
+              buttons:
+                - title: Verificar stock
+                  type: imBack
+                  value: verificar inventario
+
+              text: Consulta disponibilidad
+              title: Verificar Inventario
+
+            contentType: application/vnd.microsoft.card.hero
+
+          - content:
+              buttons:
+                - title: Ver precios
+                  type: imBack
+                  value: consultar precio
+
+              text: Información de precios
+              title: Consultar Precios
+
+            contentType: application/vnd.microsoft.card.hero
+
+        attachmentLayout: Carousel

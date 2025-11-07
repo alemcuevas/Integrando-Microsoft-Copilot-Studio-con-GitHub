@@ -1,0 +1,11 @@
+<botcomponent schemaname="miemp_agenteRetail.topic.ConsultadeProductos">
+  <componenttype>9</componenttype>
+  <description>Permite al usuario consultar información sobre productos</description>
+  <iscustomizable>1</iscustomizable>
+  <name>Consulta de Productos</name>
+  <parentbotid>
+    <schemaname>miemp_agenteRetail</schemaname>
+  </parentbotid>
+  <statecode>0</statecode>
+  <statuscode>1</statuscode>
+</botcomponent>

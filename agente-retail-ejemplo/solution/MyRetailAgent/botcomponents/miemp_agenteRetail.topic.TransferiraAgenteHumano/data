@@ -1,0 +1,20 @@
+kind: AdaptiveDialog
+startBehavior: CancelOtherTopics
+beginDialog:
+  kind: OnEscalate
+  id: main
+  intent:
+    displayName: Transferir a Agente
+    includeInOnSelectIntent: true
+    triggerQueries:
+      - hablar con agente
+      - transferir a humano
+      - quiero hablar con alguien
+      - atención al cliente
+      - necesito ayuda personal
+
+  actions:
+    - kind: SendActivity
+      id: sendMessage_escalate
+      conversationOutcome: Escalated
+      activity: Entiendo que prefieres hablar con un representante. Te estoy transfiriendo ahora. ¿Hay algo más en lo que pueda ayudarte mientras esperas?
