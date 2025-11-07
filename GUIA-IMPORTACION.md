@@ -47,20 +47,20 @@ cd "c:\Users\alemartinez\Integrando-Microsoft-Copilot-Studio-con-GitHub\agente-r
 
 ```powershell
 # Sintaxis básica
-pac chatbot import --path .
+pac copilot import --path .
 
 # Con nombre específico
-pac chatbot import --path . --name "Agente Retail Asistente"
+pac copilot import --path . --name "Agente Retail Asistente"
 
 # Con entorno específico
-pac chatbot import --path . --environment [environment-id]
+pac copilot import --path . --environment [environment-id]
 ```
 
 **4. Verificar la importación**
 
 ```powershell
-# Listar chatbots
-pac chatbot list
+# Listar agentes
+pac copilot list
 ```
 
 ---
@@ -87,7 +87,7 @@ Este método requiere más pasos manuales pero ofrece más control.
 2. Iniciar sesión con tu cuenta de Microsoft
 3. Seleccionar el entorno correcto (esquina superior derecha)
 4. Hacer clic en **"Create"** o **"Crear"**
-5. Seleccionar **"New chatbot"** o **"Nuevo chatbot"**
+5. Seleccionar **"New agent"** o **"Nuevo agente"**
 6. Seleccionar **"Start with a blank canvas"** o **"Comenzar desde cero"**
 
 #### Paso 3: Configurar información básica
@@ -150,7 +150,7 @@ Este método es útil para ambientes empresariales.
 # Crear una nueva solución
 pac solution init --publisher-name MiEmpresa --publisher-prefix emp
 
-# Agregar el chatbot a la solución
+# Agregar el agente a la solución
 pac solution add-reference --path .
 ```
 

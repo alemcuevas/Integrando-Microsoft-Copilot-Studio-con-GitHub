@@ -115,13 +115,13 @@ agente-retail-ejemplo/
 pac auth create --url https://[tu-entorno].crm.dynamics.com
 
 # Importar el agente
-pac chatbot import --path "./agente-retail-ejemplo"
+pac copilot import --path "./agente-retail-ejemplo"
 ```
 
 ### Opción 2: Importación manual
 
 1. Abre [Copilot Studio](https://copilotstudio.microsoft.com)
-2. Ve a la sección de **Chatbots**
+2. Ve a la sección de **Agentes**
 3. Haz clic en **Importar**
 4. Selecciona los archivos del proyecto
 5. Configura el entorno de destino

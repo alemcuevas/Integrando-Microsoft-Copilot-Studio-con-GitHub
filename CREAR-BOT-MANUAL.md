@@ -11,7 +11,7 @@ Has creado la solución **MyRetailAgent** exitosamente.
 
 1. Ve a: https://copilotstudio.microsoft.com
 2. Verifica que estás en el entorno: **Contoso (default)**
-3. Haz clic en **"Create"** → **"New chatbot"**
+3. Haz clic en **"Create"** → **"New agent"**
 
 ### B. Configuración Inicial del Bot
 

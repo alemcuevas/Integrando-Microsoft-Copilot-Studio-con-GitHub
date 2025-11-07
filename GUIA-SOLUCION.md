@@ -43,7 +43,7 @@ O desde la interfaz web:
 
 1. Ve a https://copilotstudio.microsoft.com
 2. **IMPORTANTE**: Antes de crear el bot, asegúrate de estar en el **mismo entorno**
-3. Al crear el nuevo chatbot:
+3. Al crear el nuevo agente:
    - En configuración avanzada, selecciona **"Add to a Dataverse solution"**
    - Selecciona la solución que creaste: **AgenteRetailAsistente**
 

@@ -55,7 +55,7 @@ Eliminar los agentes duplicados del entorno y dejar solo **"Asistente de Ventas 
    - Click en la solución **"MyRetailAgent"**
 
 4. **Ver Componentes:**
-   - Verás todos los bots (chatbots) en la solución
+   - Verás todos los bots (agentes) en la solución
 
 5. **Eliminar Bots:**
    - Selecciona **"TemplateBase"**
